@@ -89,7 +89,7 @@ const ContactUs = () => {
             © {new Date().getFullYear()} SmartCropX. All rights reserved. Built with 💚 for farmers.
           </p>
           <div className="flex gap-4 text-gray-400">
-            <a href="https://github.com/bunnysunny24/AgriSync" target="_blank" rel="noopener noreferrer" className="hover:text-green-300 transition">GitHub</a>
+            <a href="https://github.com/Jashuvav/smartcropX" target="_blank" rel="noopener noreferrer" className="hover:text-green-300 transition">GitHub</a>
             <span>•</span>
             <span className="hover:text-green-300 cursor-pointer transition">Privacy</span>
             <span>•</span>

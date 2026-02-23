@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test script to verify the AgriSync API startup
+Test script to verify the SmartCropX API startup
 """
 import os
 import sys
@@ -58,7 +58,7 @@ def test_app_creation():
 
 def main():
     """Run all tests"""
-    print("🚀 Starting AgriSync API Tests")
+    print("🚀 Starting SmartCropX API Tests")
     print(f"📁 Working directory: {os.getcwd()}")
     print(f"🐍 Python version: {sys.version}")
     
@@ -74,7 +74,7 @@ def main():
     
     if success:
         print("\n✅ All tests passed!")
-        print("🎉 AgriSync API should be ready to deploy")
+        print("🎉 SmartCropX API should be ready to deploy")
     else:
         print("\n❌ Some tests failed!")
         sys.exit(1)

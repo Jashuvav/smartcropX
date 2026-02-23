@@ -11,7 +11,7 @@
 
 ### 1. Backend (Terminal 1)
 ```bash
-cd AgriSync
+cd SmartCropX
 python -m venv .venv
 
 # Activate venv
@@ -26,7 +26,7 @@ python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
 
 ### 2. Frontend (Terminal 2)
 ```bash
-cd AgriSync/frontend
+cd SmartCropX/frontend
 npm install
 npm start
 ```

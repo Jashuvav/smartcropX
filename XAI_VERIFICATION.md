@@ -15,12 +15,12 @@ SmartCropX now includes **Explainable AI** across all three modules:
 
 ```bash
 # 1. Start backend (port 8001)
-cd AgriSync
+cd SmartCropX
 $env:TF_ENABLE_ONEDNN_OPTS = "0"
 .\.venv\Scripts\python.exe -m uvicorn backend.main:app --host 0.0.0.0 --port 8001
 
 # 2. Start frontend (port 3000) — in another terminal
-cd AgriSync/frontend
+cd SmartCropX/frontend
 $env:BROWSER = "none"
 npm start
 

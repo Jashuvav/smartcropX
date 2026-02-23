@@ -55,7 +55,7 @@
 3. **Network Issues**: Clear feedback about connection problems
 
 ### Test URLs (after deployment):
-- Health: `https://agrisync-f1ut.onrender.com/health`
+- Health: `https://smartcropx.onrender.com/health`
 - Soil prediction: Upload image via frontend
 
 ## 📱 **User Experience Improvements**

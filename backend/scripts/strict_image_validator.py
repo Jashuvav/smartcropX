@@ -33,6 +33,6 @@ def clean_directory(folder_path):
         print(f"✅ Removed {removed} invalid images.")
 
 if __name__ == "__main__":
-    BASE_DIR = r"D:\Bunny\AgriSync\backend\Soil"
+    BASE_DIR = r"D:\Bunny\SmartCropX\backend\Soil"
     for folder in ["train", "test"]:
         clean_directory(os.path.join(BASE_DIR, folder))

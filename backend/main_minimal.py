@@ -1,5 +1,5 @@
 """
-AgriSync Backend API - Minimal Version
+SmartCropX Backend API - Minimal Version
 This version starts without loading any models to ensure deployment success
 """
 from fastapi import FastAPI, File, UploadFile
@@ -12,7 +12,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="AgriSync API", version="1.0.0")
+app = FastAPI(title="SmartCropX API", version="1.0.0")
 
 # ✅ CORS for frontend
 app.add_middleware(
@@ -31,7 +31,7 @@ app.add_middleware(
 # ✅ Root endpoint
 @app.get("/")
 def root():
-    return {"message": "AgriSync API is running", "status": "healthy", "version": "1.0.0"}
+    return {"message": "SmartCropX API is running", "status": "healthy", "version": "1.0.0"}
 
 # ✅ Health check routes
 @app.get("/health")
@@ -40,7 +40,7 @@ def health_check():
 
 @app.get("/healthz")
 def health_check_detailed():
-    return {"status": "healthy", "message": "AgriSync API is running"}
+    return {"status": "healthy", "message": "SmartCropX API is running"}
 
 # ✅ Model status endpoint
 @app.get("/models/status")
@@ -83,12 +83,12 @@ async def predict_soil(file: UploadFile = File(...)):
 
 @app.on_event("startup")
 async def startup_event():
-    logger.info("🚀 AgriSync API (Minimal Version) Starting...")
+    logger.info("🚀 SmartCropX API (Minimal Version) Starting...")
     logger.info("📋 Registered Routes:")
     for route in app.routes:
         if hasattr(route, 'path'):
             logger.info(f"➡️  {route.path}")
-    logger.info("✅ AgriSync API is ready!")
+    logger.info("✅ SmartCropX API is ready!")
 
 if __name__ == "__main__":
     import uvicorn

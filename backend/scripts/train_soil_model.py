@@ -7,11 +7,11 @@ from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau, Learnin
 import os, json
 
 # Paths
-DATA_DIR = r"D:\Bunny\AgriSync\backend\Soil"
+DATA_DIR = r"D:\Bunny\SmartCropX\backend\Soil"
 TRAIN_DIR = os.path.join(DATA_DIR, "train")
 TEST_DIR = os.path.join(DATA_DIR, "test")
-MODEL_PATH = r"D:\Bunny\AgriSync\backend\models\soil_classifier_best.keras"
-LABELS_PATH = r"D:\Bunny\AgriSync\backend\models\class_names.json"
+MODEL_PATH = r"D:\Bunny\SmartCropX\backend\models\soil_classifier_best.keras"
+LABELS_PATH = r"D:\Bunny\SmartCropX\backend\models\class_names.json"
 IMG_SIZE = (224, 224)
 BATCH_SIZE = 32
 EPOCHS = 70

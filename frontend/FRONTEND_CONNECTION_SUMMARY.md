@@ -2,8 +2,8 @@
 
 ## ✅ **Successfully Connected Frontend to Backend!**
 
-Your AgriSync frontend is now connected to the deployed backend API at:
-**`https://agrisync-f1ut.onrender.com`**
+Your SmartCropX frontend is now connected to the deployed backend API at:
+**`https://smartcropx.onrender.com`**
 
 ## 🔧 **Changes Made**
 
@@ -24,20 +24,20 @@ Your AgriSync frontend is now connected to the deployed backend API at:
 ## 🌍 **Environment Detection**
 The frontend automatically detects the environment:
 - **Local Development**: Uses `http://localhost:8000`
-- **Production/Deployed**: Uses `https://agrisync-f1ut.onrender.com`
+- **Production/Deployed**: Uses `https://smartcropx.onrender.com`
 
 ## 📱 **Updated Features**
 
 ### Plant Disease Detection
-- Now sends images to: `https://agrisync-f1ut.onrender.com/predict`
+- Now sends images to: `https://smartcropx.onrender.com/predict`
 - Returns real-time AI predictions
 
 ### Soil Type Prediction  
-- Now sends images to: `https://agrisync-f1ut.onrender.com/predict-soil`
+- Now sends images to: `https://smartcropx.onrender.com/predict-soil`
 - Returns soil classification with recommendations
 
 ### Market Predictions
-- Fetches live data from: `https://agrisync-f1ut.onrender.com/market-predictions`
+- Fetches live data from: `https://smartcropx.onrender.com/market-predictions`
 - Shows "LIVE DATA" badge when using API data
 - Gracefully falls back to static data if API unavailable
 
@@ -51,13 +51,13 @@ This page will test all API endpoints and show connection status.
 You can test the endpoints directly:
 ```bash
 # Health check
-curl https://agrisync-f1ut.onrender.com/health
+curl https://smartcropx.onrender.com/health
 
 # Detailed health check  
-curl https://agrisync-f1ut.onrender.com/healthz
+curl https://smartcropx.onrender.com/healthz
 
 # Market predictions
-curl https://agrisync-f1ut.onrender.com/market-predictions
+curl https://smartcropx.onrender.com/market-predictions
 ```
 
 ## 🚀 **How to Deploy Your Frontend**
@@ -104,8 +104,8 @@ curl https://agrisync-f1ut.onrender.com/market-predictions
 If you encounter any issues:
 1. Check the API test page (`/api-test`) for connection status
 2. Check browser console for error messages
-3. Verify the backend is running at `https://agrisync-f1ut.onrender.com/health`
+3. Verify the backend is running at `https://smartcropx.onrender.com/health`
 
 ---
 
-**🎉 Your AgriSync application is now fully connected and ready to use!**
+**🎉 Your SmartCropX application is now fully connected and ready to use!**

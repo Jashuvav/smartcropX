@@ -17,7 +17,7 @@ def test_soil_prediction():
     test_image.save('test_soil.jpg')
     
     # Test the live endpoint
-    url = "https://agrisync-f1ut.onrender.com/predict-soil"
+    url = "https://smartcropx.onrender.com/predict-soil"
     
     print(f"🧪 Testing soil prediction endpoint: {url}")
     
@@ -44,7 +44,7 @@ def test_soil_prediction():
 
 def test_health_endpoint():
     """Test the health endpoint"""
-    url = "https://agrisync-f1ut.onrender.com/health"
+    url = "https://smartcropx.onrender.com/health"
     
     print(f"🏥 Testing health endpoint: {url}")
     
@@ -60,7 +60,7 @@ def test_health_endpoint():
         print(f"❌ Health check failed: {str(e)}")
 
 if __name__ == "__main__":
-    print("🚀 Starting AgriSync API diagnostics...")
+    print("🚀 Starting SmartCropX API diagnostics...")
     
     test_health_endpoint()
     print("\n" + "="*50 + "\n")

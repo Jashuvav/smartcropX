@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AgriSync Model Deployment Test Script
+SmartCropX Model Deployment Test Script
 Tests all models to ensure they are working correctly in production
 """
 
@@ -162,7 +162,7 @@ def check_model_files():
 
 def main():
     """Run all tests"""
-    logger.info("🚀 Starting AgriSync Model Deployment Tests")
+    logger.info("🚀 Starting SmartCropX Model Deployment Tests")
     logger.info("=" * 60)
     
     tests = [

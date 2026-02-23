@@ -1,4 +1,4 @@
-# 🚀 AgriSync Render Deployment Checklist
+# 🚀 SmartCropX Render Deployment Checklist
 
 ## ✅ Critical Changes Required in Render Dashboard
 
@@ -37,11 +37,11 @@
 2. **Deploy**:
    - Trigger a new deployment
    - Monitor deployment logs
-   - Check health endpoint: `https://agrisync-f1ut.onrender.com/healthz`
+   - Check health endpoint: `https://smartcropx.onrender.com/healthz`
 
 3. **Verify**:
    - API should start successfully
-   - Health check should return: `{"status": "healthy", "message": "AgriSync API is running"}`
+   - Health check should return: `{"status": "healthy", "message": "SmartCropX API is running"}`
    - Models will load automatically when first API call is made
 
 ## 🆘 Troubleshooting

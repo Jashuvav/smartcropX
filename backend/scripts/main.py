@@ -107,7 +107,7 @@ def health_check_detailed():
     """Detailed health check with model status"""
     status = {
         "status": "healthy",
-        "message": "AgriSync API is running",
+        "message": "SmartCropX API is running",
         "models": {
             "soil_model": soil_model is not None,
             "plantdoc_predictor": plantdoc_predict_func is not None,

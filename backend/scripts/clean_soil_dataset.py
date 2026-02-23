@@ -1,7 +1,7 @@
 import os
 from PIL import Image
 
-BASE_PATH = r"D:\Bunny\AgriSync\backend\Soil"
+BASE_PATH = r"D:\Bunny\SmartCropX\backend\Soil"
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".bmp", ".gif"}
 
 def is_valid_image(file_path):

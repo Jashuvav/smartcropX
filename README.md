@@ -1,112 +1,281 @@
-# 🌿 AgriSync: AI-Powered Smart Farming & Marketplace System
+# 🌿 SmartCropX — AI-Powered Smart Agriculture Platform
 
-Welcome to **AgriSync**, a smart agriculture platform that leverages **AI/ML**, **Deep Learning**, and **Blockchain** to empower farmers with real-time insights, automate crop health monitoring, and provide transparent crop transactions.
+**SmartCropX** is a full-stack smart agriculture platform combining **AI/ML**, **Deep Learning**, **Explainable AI (XAI)**, and **Blockchain** technology to help farmers make data-driven decisions — from detecting plant diseases to predicting market prices, monitoring weather, analyzing soil, and trading crops transparently.
 
-🔗 GitHub: [https://github.com/bunnysunny24/AgriSync](https://github.com/bunnysunny24/AgriSync)
-
----
-
-## 🌾 Project Overview
-
-**AgriSync** is a full-stack system built for smart farming and crop traceability. It brings together:
-
-- 🌿 AI-based **Plant Disease Detection** via images
-- 📈 **Crop Price Prediction** based on historical data
-- 🌦️ **Weather Forecasting & Alerts**
-- 🌱 **Soil Quality Prediction**
-- 🔗 **Blockchain Marketplace** for transparent crop transactions
-- 👥 **Community Forum** — posts, comments, likes with JWT auth
-- 🔍 **Explainable AI (XAI)** — Grad-CAM & SHAP for model transparency
-- 🎨 A modern, user-friendly **React-based UI**
-
-Farmers can make better decisions, detect diseases early, forecast crop prices, and sell safely using blockchain-backed records.
+🔗 **GitHub**: [https://github.com/Jashuvav/smartcropX](https://github.com/Jashuvav/smartcropX)
 
 ---
 
-## ⚙️ How It Works
+## 📋 Table of Contents
 
-### 🧠 AI + ML Models
-- **Plant Disease Detection**: Deep learning model (EfficientNetB4) classifies leaf diseases using uploaded images.
-- **Price Prediction**: Machine learning models (Random Forest, XGBoost) trained on crop price data.
-- **Weather Forecasting**: Uses time-series ML models to predict upcoming weather patterns.
-- **Soil Quality Detection**: Classifies soil type using trained models based on NPK values and other soil parameters.
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Getting Started](#-getting-started)
+- [API Reference](#-api-reference)
+- [AI/ML Models](#-aiml-models)
+- [Explainable AI (XAI)](#-explainable-ai-xai)
+- [Blockchain Marketplace](#-blockchain-marketplace)
+- [Community Forum](#-community-forum)
+- [Screenshots](#-screenshots)
 
-### 🔗 Blockchain Integration
-- A smart contract (Solidity) enables **secure and transparent transactions** for crop selling.
-- Farmers and buyers interact via a React UI, with Web3.js handling the contract calls.
-- Transactions are stored on the **Ethereum** testnet (Ganache/Truffle), ensuring trust.
+---
 
-### 🌐 Frontend Interface
-- Built using **React** and styled with **Tailwind CSS**.
-- Farmers can:
-  - Upload plant images
-  - View predicted prices and weather alerts
-  - See crop requests
-  - List items for sale on the blockchain marketplace
+## ✨ Features
+
+| Feature | Description |
+|---------|-------------|
+| 🌿 **Plant Disease Detection** | Upload a leaf image → AI identifies the disease using EfficientNetB4 deep learning model |
+| 📈 **Crop Price Prediction** | Predict future market prices for crops (Tomato, Onion, Wheat, Banana, Carrot) using XGBoost & Random Forest |
+| 🌦️ **Weather Forecasting & Alerts** | ML-based weather prediction with real-time alerts for extreme conditions |
+| 🌱 **Soil Quality Detection** | Classify soil type from images using a trained CNN model |
+| 🔗 **Blockchain Marketplace** | Buy/sell crops securely via Ethereum smart contracts with full transaction traceability |
+| 👥 **Community Forum** | Post, comment, like, and share knowledge — with JWT auth and role-based access (Farmer/Buyer/Admin) |
+| 🔍 **Explainable AI (XAI)** | Grad-CAM heatmaps and SHAP feature explanations for model transparency |
+| 📱 **Modern Responsive UI** | React + Tailwind CSS with smooth navigation, animated dashboard, and mobile-friendly design |
 
 ---
 
 ## 🧰 Tech Stack
 
-| Layer         | Technologies Used                                               |
-|---------------|-----------------------------------------------------------------|
-| **Frontend**  | React.js, Tailwind CSS, Web3.js                                 |
-| **Backend**   | FastAPI, Python, Uvicorn                                        |
-| **AI/ML**     | TensorFlow, Keras, Scikit-learn, XGBoost, OpenCV                |
-| **Blockchain**| Solidity, Truffle, Ganache, Ethereum Testnet                    |
-| **Data Tools**| Pandas, NumPy, Matplotlib                                       |
+| Layer | Technologies |
+|-------|-------------|
+| **Frontend** | React 19, Tailwind CSS 3, React Router 6, Axios, Framer Motion, Lucide Icons, Web3.js |
+| **Backend** | FastAPI, Python 3.13, Uvicorn, Pydantic |
+| **AI / ML** | TensorFlow, Keras (EfficientNetB4), Scikit-learn, XGBoost, OpenCV |
+| **XAI** | Grad-CAM (tf-keras-vis), SHAP |
+| **Auth** | JWT (HS256) via python-jose, passlib + bcrypt |
+| **Database** | SQLite + SQLAlchemy 2.0 ORM |
+| **Blockchain** | Solidity, Truffle, Ganache, Ethereum Testnet |
+| **Data Tools** | Pandas, NumPy, Matplotlib |
 
 ---
 
-## 📦 Key Modules
+## 📁 Project Structure
 
-- `predict_plantdoc.py`: Plant disease prediction
-- `predict_with_graph.py`: Crop price prediction with graph generation
-- `predict_weather.py`: Weather forecasting using ML
-- `predict_soil.py`: Predicts soil type
-- Smart contract: Crop listing, purchasing, and verification via blockchain
+```
+SmartCropX/
+├── backend/
+│   ├── main.py                  # FastAPI app with all routers
+│   ├── start.py                 # Server entry point (port 8001)
+│   ├── community/               # Community forum module
+│   │   ├── models.py            # SQLAlchemy models (User, Post, Comment, Like)
+│   │   ├── schemas.py           # Pydantic request/response schemas
+│   │   ├── auth.py              # JWT authentication & password hashing
+│   │   ├── routes.py            # Community & auth API routes
+│   │   └── database.py          # SQLite database setup
+│   ├── scripts/
+│   │   ├── predict_plantdoc.py  # Plant disease prediction
+│   │   ├── predict_soil.py      # Soil type classification
+│   │   ├── predict_weather.py   # Weather forecasting
+│   │   ├── predict_with_graph.py # Crop price prediction + graph
+│   │   ├── xai_gradcam.py       # Grad-CAM explainability
+│   │   ├── xai_shap.py          # SHAP explainability
+│   │   └── ...training scripts
+│   ├── models/                  # Trained .keras model files
+│   ├── data/                    # CSV datasets + SQLite DB
+│   └── blockchain/              # Solidity smart contracts
+├── frontend/
+│   ├── src/
+│   │   ├── App.js               # Routes & AuthProvider
+│   │   ├── context/AuthContext.js
+│   │   └── pages/
+│   │       ├── Header.jsx       # Navigation bar
+│   │       ├── AgriDashboard.jsx # Main dashboard (7 feature cards)
+│   │       ├── OrganicFarmUI.jsx # Landing / About section
+│   │       ├── AgriNewsSection.jsx
+│   │       ├── ContactUs.jsx    # Contact form + footer
+│   │       ├── CommunityFeed.jsx
+│   │       ├── CreatePost.jsx
+│   │       ├── PostDetail.jsx
+│   │       ├── Login.jsx / Register.jsx
+│   │       └── ...feature pages
+│   ├── contracts/               # Solidity contracts (frontend copy)
+│   └── public/
+├── README.md
+├── .gitignore
+└── build.sh / render.yaml       # Deployment config
+```
 
 ---
 
-## 👥 Community Module
+## 🚀 Getting Started
 
-A full-featured community forum integrated into the platform, enabling farmers and buyers to share knowledge, ask questions, and interact.
+### Prerequisites
+- **Python 3.10+**
+- **Node.js 18+** and npm
+- **Git** (with Git LFS for model files)
 
-### Architecture
-| Layer | Technology |
-|-------|-----------|
-| Auth | JWT (HS256) via `python-jose` + `passlib` bcrypt |
-| Database | SQLite + SQLAlchemy 2.0 ORM |
-| API | FastAPI routers (`/api/auth/*`, `/api/community/*`) |
-| Frontend | React context (`AuthContext`) + dedicated pages |
+### 1. Clone the Repository
 
-### Features
-- **User roles**: FARMER, BUYER, ADMIN
-- **Posts**: Create, edit, delete, search, filter by tag, sort by latest/top
-- **Comments**: Add, delete (author or admin)
-- **Likes**: Toggle like per post
-- **Image upload**: Attach images to posts
-- **Auth-aware UI**: Login/Logout in header, role badges
+```bash
+git clone https://github.com/Jashuvav/smartcropX.git
+cd smartcropX
+```
 
-### API Endpoints
+### 2. Backend Setup
+
+```bash
+cd backend
+python -m venv .venv
+
+# Activate virtual environment
+# Windows:
+.venv\Scripts\activate
+# macOS/Linux:
+source .venv/bin/activate
+
+pip install -r requirements.txt
+```
+
+### 3. Start the Backend Server
+
+```bash
+python start.py
+# Server runs at http://localhost:8001
+# API docs at http://localhost:8001/docs
+```
+
+### 4. Frontend Setup
+
+```bash
+cd frontend
+npm install
+npm start
+# App runs at http://localhost:3000
+```
+
+### 5. Blockchain (Optional)
+
+```bash
+# Install Truffle & Ganache globally
+npm install -g truffle ganache-cli
+
+# Start Ganache
+ganache-cli
+
+# Deploy contracts
+cd frontend
+truffle migrate --reset
+```
+
+---
+
+## 📡 API Reference
+
+Base URL: `http://localhost:8001`
+
+### Core Prediction Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/predict` | Plant disease detection (upload image) |
+| POST | `/predict-soil` | Soil type classification (upload image) |
+| POST | `/predict-price` | Crop price prediction |
+| GET | `/weather` | Weather forecast & alerts |
+| POST | `/xai/gradcam` | Grad-CAM heatmap for disease prediction |
+| POST | `/xai/shap` | SHAP explanation for price prediction |
+
+### Authentication Endpoints
 
 | Method | Endpoint | Auth | Description |
 |--------|----------|------|-------------|
 | POST | `/api/auth/register` | — | Create account (name, email, password, role) |
-| POST | `/api/auth/login` | — | Returns JWT token |
-| GET | `/api/auth/me` | ✅ | Current user profile |
+| POST | `/api/auth/login` | — | Returns JWT access token |
+| GET | `/api/auth/me` | ✅ | Get current user profile |
+
+### Community Forum Endpoints
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
 | GET | `/api/community/posts` | — | List posts (search, tag, sort) |
-| POST | `/api/community/posts` | ✅ | Create post |
-| GET | `/api/community/posts/{id}` | — | Single post detail |
+| POST | `/api/community/posts` | ✅ | Create a new post |
+| GET | `/api/community/posts/{id}` | — | Get post details |
 | PATCH | `/api/community/posts/{id}` | ✅ | Edit post (author/admin) |
 | DELETE | `/api/community/posts/{id}` | ✅ | Delete post (author/admin) |
-| GET | `/api/community/posts/{id}/comments` | — | List comments |
-| POST | `/api/community/posts/{id}/comments` | ✅ | Add comment |
-| DELETE | `/api/community/comments/{id}` | ✅ | Delete comment |
-| POST | `/api/community/posts/{id}/like` | ✅ | Toggle like |
-| POST | `/api/community/upload` | ✅ | Upload image |
+| GET | `/api/community/posts/{id}/comments` | — | List comments on a post |
+| POST | `/api/community/posts/{id}/comments` | ✅ | Add a comment |
+| DELETE | `/api/community/comments/{id}` | ✅ | Delete a comment |
+| POST | `/api/community/posts/{id}/like` | ✅ | Toggle like on a post |
+| POST | `/api/community/upload` | ✅ | Upload an image |
+
+---
+
+## 🧠 AI/ML Models
+
+### Plant Disease Detection
+- **Architecture**: EfficientNetB4 (transfer learning)
+- **Dataset**: PlantDoc — 27 classes of healthy and diseased leaves
+- **Input**: Leaf image (224×224 RGB)
+- **Output**: Disease class + confidence score
+
+### Crop Price Prediction
+- **Algorithms**: XGBoost, Random Forest
+- **Crops Supported**: Tomato, Onion, Wheat, Banana, Carrot
+- **Features**: Historical prices, seasonal patterns, weather correlation
+- **Output**: Predicted price + trend graph
+
+### Weather Forecasting
+- **Method**: Time-series ML on historical weather data
+- **Output**: Temperature, humidity, rainfall predictions + extreme weather alerts
+
+### Soil Quality Detection
+- **Architecture**: CNN classifier
+- **Input**: Soil image
+- **Output**: Soil type classification
+
+---
+
+## 🔍 Explainable AI (XAI)
+
+SmartCropX implements two XAI techniques to make AI predictions transparent:
+
+### Grad-CAM (Gradient-weighted Class Activation Mapping)
+- Generates **heatmap overlays** on leaf images highlighting the regions the model focused on
+- Helps farmers understand *why* a disease was detected
+- Implemented via `xai_gradcam.py` using tf-keras-vis
+
+### SHAP (SHapley Additive exPlanations)
+- Shows **feature importance** for price predictions
+- Visualizes which factors (historical price, weather, season) most influenced the prediction
+- Implemented via `xai_shap.py`
+
+---
+
+## 🔗 Blockchain Marketplace
+
+- **Smart Contracts**: Written in Solidity (`Marketplace.sol`, `StorageManagement.sol`)
+- **Framework**: Truffle for compilation and deployment
+- **Local Blockchain**: Ganache for testing
+- **Frontend Integration**: Web3.js connects React UI to Ethereum contracts
+- **Features**:
+  - List crops for sale with price and quantity
+  - Buyers can purchase crops with full transaction history
+  - All transactions recorded on-chain for transparency and trust
+
+---
+
+## 👥 Community Forum
+
+A built-in social platform for farmers, buyers, and administrators.
+
+### Roles
+| Role | Capabilities |
+|------|-------------|
+| **FARMER** | Create posts, comment, like, share farming tips |
+| **BUYER** | Engage with community, ask about crops |
+| **ADMIN** | Moderate content, delete any post/comment |
+
+### Features
+- Create, edit, delete posts with tags
+- Comment on posts (delete by author or admin)
+- Like/unlike posts
+- Search posts by keyword, filter by tag, sort by latest or top
+- Image upload support
+- Auth-aware UI with login/logout and role badges
 
 ### Seed Users (auto-created on first startup)
+
 | Name | Email | Password | Role |
 |------|-------|----------|------|
 | Rajesh Kumar | rajesh@smartcropx.demo | password123 | FARMER |
@@ -114,6 +283,7 @@ A full-featured community forum integrated into the platform, enabling farmers a
 | Admin | admin@smartcropx.demo | admin123 | ADMIN |
 
 ### Quick Test
+
 ```bash
 # Login
 curl -X POST http://localhost:8001/api/auth/login \
@@ -132,21 +302,19 @@ curl -X POST http://localhost:8001/api/community/posts \
 
 ---
 
-## 🧑‍🌾 Why AgriSync?
+## 🧑‍🌾 Why SmartCropX?
 
-- Reduce crop loss with early disease detection
-- Get real-time, data-backed market prices
-- Sell crops confidently with blockchain traceability
-- Empower farmers through AI-driven decisions
-
----
-
-## 📍 Live Demo / GitHub
-
-Check the repository and explore more:  
-👉 [AgriSync GitHub Repo](https://github.com/bunnysunny24/AgriSync)
+- 🌿 **Reduce crop loss** with early AI-powered disease detection
+- 📊 **Make informed decisions** with data-backed price predictions
+- 🔗 **Trade with confidence** using blockchain-verified transactions
+- 🔍 **Understand AI decisions** through Grad-CAM and SHAP explanations
+- 👥 **Learn from the community** via the built-in farmer forum
+- 🌦️ **Stay prepared** with ML-based weather forecasting and alerts
 
 ---
+
+## 📸 Screenshots
+
 ![Screenshot 2025-03-14 173845](https://github.com/user-attachments/assets/8ceb7a78-cc62-46e4-af5a-37f3de5fec85)
 
 ![Screenshot 2025-03-14 173013](https://github.com/user-attachments/assets/829c1008-fc51-471f-8f3a-30bf3865ecff)
@@ -222,3 +390,13 @@ Check the repository and explore more:
 ![Screenshot 2025-03-14 174059](https://github.com/user-attachments/assets/215e09b2-d517-4caa-9e84-2f13320d88a8)
 
 ![Screenshot 2025-03-14 174106](https://github.com/user-attachments/assets/6ffbf2b1-69e6-4202-b88d-7b0e2282ba39)
+
+---
+
+## 📄 License
+
+This project is for educational and research purposes.
+
+---
+
+> Built with ❤️ by the SmartCropX team
