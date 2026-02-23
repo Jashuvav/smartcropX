@@ -20,6 +20,7 @@ import CreatePost from './pages/CreatePost';
 import PostDetail from './pages/PostDetail';
 import { AuthProvider } from './context/AuthContext';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import XAIChatbot from './components/XAIChatbot';
 
 function App() {
   const [loaded, setLoaded] = useState(false);
@@ -100,6 +101,9 @@ function App() {
             </div>
           } />
         </Routes>
+
+        {/* Floating XAI Chatbot — visible on all pages */}
+        <XAIChatbot />
       </div>
     </Router>
     </AuthProvider>

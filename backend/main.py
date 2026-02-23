@@ -16,6 +16,7 @@ import json
 import sys
 import traceback
 import logging
+from pydantic import BaseModel
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -501,6 +502,29 @@ def explain_all_prices_endpoint():
         logger.error(f"Price XAI (all) error: {e}")
         logger.error(traceback.format_exc())
         return {"status": "error", "error": str(e), "data": {}}
+
+
+# ═══════════════════════════════════════════════════════════════════
+# ✅ XAI Chatbot Endpoint
+# ═══════════════════════════════════════════════════════════════════
+
+class ChatMessage(BaseModel):
+    message: str
+
+@app.post("/api/chat")
+def chat_endpoint(payload: ChatMessage):
+    """Explainable-AI chatbot — answers crop, disease, soil, price & XAI questions."""
+    try:
+        from chatbot import get_chat_response
+        result = get_chat_response(payload.message)
+        return {"status": "success", **result}
+    except Exception as e:
+        logger.error(f"Chat error: {e}")
+        return {
+            "status": "error",
+            "reply": "Sorry, something went wrong. Please try again!",
+            "suggestions": ["Help", "Crop info"],
+        }
 
 
 # ✅ Print all registered routes on startup
