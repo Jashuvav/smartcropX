@@ -1,0 +1,214 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from '../context/AuthContext';
+
+const Header = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [activeItem, setActiveItem] = useState(null);
+  const [scrolled, setScrolled] = useState(false);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const scrollToHash = useCallback((hash) => {
+    const id = hash.replace('#', '');
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return true;
+    }
+    return false;
+  }, []);
+
+  const handleHashClick = useCallback((e, path) => {
+    e.preventDefault();
+    if (path === '/') {
+      if (location.pathname === '/') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        navigate('/');
+      }
+      return;
+    }
+    if (path.startsWith('#')) {
+      if (location.pathname === '/') {
+        scrollToHash(path);
+      } else {
+        navigate('/');
+        setTimeout(() => scrollToHash(path), 400);
+      }
+    }
+  }, [location.pathname, navigate, scrollToHash]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+  
+  const menuItems = [
+    { name: 'Home', icon: '🏠', path: '/' },
+    { name: 'About Us', icon: 'ℹ️', path: '#aboutus' },
+    { name: 'Community', icon: '👥', path: '/community', isRoute: true },
+    { name: 'News', icon: '📰', path: '#news' },
+    { name: 'Contact Us', icon: '✉️', path: '#contactus' }
+  ];
+  
+  return (
+    <header className={`w-full z-50 transition-all duration-500 ${
+      scrolled ? 'bg-[#263a28] shadow-lg py-2' : 'bg-[#334b35] py-4'
+    } text-white px-6 md:px-16`}>
+      <div className="flex items-center justify-between max-w-7xl mx-auto md:justify-start">
+        <div className="text-2xl font-bold relative overflow-hidden group md:mr-12">
+          <div className="flex items-center">
+            <span className="text-green-300 mr-2 transform transition-all duration-300 group-hover:rotate-12 group-hover:scale-125">🌿</span>
+            <span className="inline-block relative">
+              <span className="inline-block transition-all duration-500 group-hover:transform group-hover:translate-y-[-100%] group-hover:opacity-0">Smart</span>
+              <span className="inline-block transition-all duration-500 group-hover:text-green-300">CropX</span>
+              <span className="absolute left-0 top-0 text-green-300 transition-all duration-500 transform translate-y-[100%] opacity-0 group-hover:transform group-hover:translate-y-0 group-hover:opacity-100">Eco</span>
+            </span>
+          </div>
+          <span className="absolute -bottom-1 left-0 w-0 h-1 bg-gradient-to-r from-green-300 to-green-100 transition-all duration-700 ease-in-out group-hover:w-full rounded-full"></span>
+        </div>
+        
+        <button 
+          className="md:hidden focus:outline-none p-2 rounded-full bg-green-800 bg-opacity-30 hover:bg-opacity-70 transition-all duration-300 hover:scale-110" 
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle menu"
+        >
+          <div className="w-6 h-6 relative flex justify-center items-center">
+            <span className={`absolute h-0.5 w-5 bg-white transform transition-all duration-300 ease-in-out ${menuOpen ? 'rotate-45' : '-translate-y-1.5'}`}></span>
+            <span className={`absolute h-0.5 w-5 bg-white transform transition-all duration-300 ease-in-out ${menuOpen ? 'opacity-0' : 'opacity-100'}`}></span>
+            <span className={`absolute h-0.5 w-5 bg-white transform transition-all duration-300 ease-in-out ${menuOpen ? '-rotate-45' : 'translate-y-1.5'}`}></span>
+          </div>
+        </button>
+        
+        <nav className="hidden md:flex md:justify-between md:flex-grow">
+          <ul className="flex items-center space-x-8">
+            {menuItems.map((item, index) => (
+              <li 
+                key={index} 
+                className="relative"
+                onMouseEnter={() => setActiveItem(item.name)}
+                onMouseLeave={() => setActiveItem(null)}
+              >
+                {item.isRoute ? (
+                  <Link 
+                    to={item.path} 
+                    className="text-white no-underline text-sm py-2 block hover:text-green-200 transition-all duration-300"
+                  >
+                    <span className={`transition-all duration-300 ${
+                      activeItem === item.name ? 'transform scale-110 text-green-200 font-medium' : ''
+                    }`}>
+                      {item.name}
+                    </span>
+                    <span className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 transition-all duration-300 ${
+                      activeItem === item.name ? 'w-full' : 'w-0'
+                    }`}></span>
+                  </Link>
+                ) : (
+                  <a 
+                    href={item.path} 
+                    onClick={(e) => handleHashClick(e, item.path)}
+                    className="text-white no-underline text-sm py-2 block hover:text-green-200 transition-all duration-300 cursor-pointer"
+                  >
+                    <span className={`transition-all duration-300 ${
+                      activeItem === item.name ? 'transform scale-110 text-green-200 font-medium' : ''
+                    }`}>
+                      {item.name}
+                    </span>
+                    <span className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 transition-all duration-300 ${
+                      activeItem === item.name ? 'w-full' : 'w-0'
+                    }`}></span>
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
+          
+          <div className="flex items-center gap-3">
+  {user ? (
+    <>
+      <span className="text-green-200 text-sm">Hi, {user.full_name?.split(' ')[0]}</span>
+      <button onClick={logout} className="bg-red-600 hover:bg-red-500 px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-400">
+        Logout
+      </button>
+    </>
+  ) : (
+    <Link to="/LoginPage">
+      <button className="bg-green-600 hover:bg-green-500 px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400">
+        Login
+      </button>
+    </Link>
+  )}
+</div>
+        </nav>
+      </div>
+    
+      <div className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${
+        menuOpen ? 'max-h-screen opacity-100 pt-6' : 'max-h-0 opacity-0'
+      }`}>
+        <ul className="flex flex-col">
+          {menuItems.map((item, index) => (
+            <li 
+              key={index} 
+              className={`transform transition-all duration-300 hover:bg-green-800 hover:bg-opacity-30 rounded-lg px-4 ${
+                menuOpen ? `opacity-100 translate-x-0` : 'opacity-0 -translate-x-8'
+              }`}
+              style={{ transitionDelay: menuOpen ? `${index * 50}ms` : '0ms' }}
+            >
+              {item.isRoute ? (
+                <Link 
+                  to={item.path} 
+                  className="block py-3 text-white no-underline text-sm hover:text-green-200 transition-all duration-300 flex items-center"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <span className="mr-3 text-green-300">{item.icon}</span>
+                  <span>{item.name}</span>
+                </Link>
+              ) : (
+                <a 
+                  href={item.path} 
+                  onClick={(e) => { handleHashClick(e, item.path); setMenuOpen(false); }}
+                  className="block py-3 text-white no-underline text-sm hover:text-green-200 transition-all duration-300 flex items-center cursor-pointer"
+                >
+                  <span className="mr-3 text-green-300">{item.icon}</span>
+                  <span>{item.name}</span>
+                  <span className="ml-auto transform transition-all duration-300 opacity-0 hover:opacity-100">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </a>
+              )}
+            </li>
+          ))}
+          <li className="mt-4 px-4 pb-4">
+            {user ? (
+              <button onClick={logout} className="w-full bg-red-600 hover:bg-red-500 py-3 rounded-lg text-sm font-medium transition-all duration-300 hover:shadow-lg transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-400">
+                Logout ({user.full_name?.split(' ')[0]})
+              </button>
+            ) : (
+              <Link to="/LoginPage">
+                <button className="w-full bg-green-600 hover:bg-green-500 py-3 rounded-lg text-sm font-medium transition-all duration-300 hover:shadow-lg transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-400">
+                  Login
+                </button>
+              </Link>
+            )}
+          </li>
+        </ul>
+      </div>
+    </header>
+  );
+};
+
+export default Header;

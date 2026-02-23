@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+*.egg
+
+# Environment
+.env
+backend/.env
+frontend/.env
+
+# Database
+*.db
+
+# Node
+node_modules/
+frontend/node_modules/
+
+# Build outputs
+frontend/build/
+dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Generated graphs (large / ephemeral)
+backend/scripts/predicted_graphs/*.png
+
+# Uploaded images
+backend/uploaded_images/*
+backend/community_uploads/*
+!backend/uploaded_images/.gitkeep
+!backend/community_uploads/.gitkeep
+
+# Misc
+xai_check*.txt
+*.log
