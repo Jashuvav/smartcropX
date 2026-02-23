@@ -2,12 +2,13 @@
 SmartCropX Backend API
 Main FastAPI application
 """
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import os
 import shutil
 import uuid
+import time
 from PIL import Image
 from fastapi.responses import JSONResponse
 import io
@@ -16,10 +17,22 @@ import json
 import sys
 import traceback
 import logging
-from pydantic import BaseModel
+from typing import Optional
+from pydantic import BaseModel, Field
+
+# ── Environment loading ─────────────────────────────────────────────
+try:
+    from dotenv import load_dotenv
+    load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
+except ImportError:
+    pass  # python-dotenv is optional; env vars can be set externally
 
 # Configure logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
 logger = logging.getLogger(__name__)
 
 # Add scripts directory to Python path
@@ -27,6 +40,15 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'scripts'))
 
 # Add backend directory itself so community package resolves
 sys.path.insert(0, os.path.dirname(__file__))
+
+# ── Chatbot module ──────────────────────────────────────────────────
+try:
+    from chatbot import get_chat_response
+    _chatbot_available = True
+    logger.info("✅ Chatbot module loaded")
+except Exception as _chat_import_err:
+    _chatbot_available = False
+    logger.warning(f"⚠️ Chatbot module failed to import: {_chat_import_err}")
 
 # ── Community module ────────────────────────────────────────────────
 from community.routes import router as community_router, auth_router, seed_if_empty
@@ -148,6 +170,7 @@ def root():
 
 # ✅ Health check routes
 @app.get("/health")
+@app.get("/api/health")
 def health_check():
     return {"status": "API is running"}
 
@@ -162,9 +185,19 @@ def health_check_detailed():
             "soil_model": soil_model is not None,
             "plantdoc_predictor": plantdoc_predict_func is not None,
             "price_predictor": price_predict_func is not None
-        }
+        },
+        "chatbot": _chatbot_available,
     }
     return status
+
+@app.get("/api/chat/health")
+def chat_health():
+    """Health check for the chatbot sub-system."""
+    return {
+        "status": "ok" if _chatbot_available else "degraded",
+        "chatbot_loaded": _chatbot_available,
+        "mode": "ai" if _chatbot_available else "fallback",
+    }
 
 # ✅ Plant Disease Prediction
 @app.post("/predict")
@@ -509,22 +542,58 @@ def explain_all_prices_endpoint():
 # ═══════════════════════════════════════════════════════════════════
 
 class ChatMessage(BaseModel):
-    message: str
+    message: str = Field(..., min_length=1, max_length=2000, description="User message text")
+    sessionId: Optional[str] = Field(None, description="Optional session identifier for multi-turn context")
+
+
+_FALLBACK_REPLY = (
+    "🤖 Chatbot is running in **demo mode**. "
+    "The knowledge engine is temporarily unavailable. "
+    "Please try again in a moment or contact the admin to configure the backend."
+)
+
 
 @app.post("/api/chat")
-def chat_endpoint(payload: ChatMessage):
+async def chat_endpoint(payload: ChatMessage, request: Request):
     """Explainable-AI chatbot — answers crop, disease, soil, price & XAI questions."""
+    request_id = uuid.uuid4().hex[:12]
+    t0 = time.perf_counter()
+    logger.info(f"[chat:{request_id}] ← message={payload.message!r} session={payload.sessionId}")
+
     try:
-        from chatbot import get_chat_response
+        if not _chatbot_available:
+            logger.warning(f"[chat:{request_id}] chatbot module not loaded — returning fallback")
+            return {
+                "status": "success",
+                "reply": _FALLBACK_REPLY,
+                "suggestions": ["Help", "Crop info"],
+                "mode": "fallback",
+                "requestId": request_id,
+            }
+
         result = get_chat_response(payload.message)
-        return {"status": "success", **result}
-    except Exception as e:
-        logger.error(f"Chat error: {e}")
+        latency_ms = round((time.perf_counter() - t0) * 1000, 1)
+        logger.info(f"[chat:{request_id}] → reply_len={len(result.get('reply',''))} latency={latency_ms}ms")
         return {
-            "status": "error",
-            "reply": "Sorry, something went wrong. Please try again!",
-            "suggestions": ["Help", "Crop info"],
+            "status": "success",
+            **result,
+            "mode": "ai",
+            "requestId": request_id,
         }
+    except Exception as e:
+        latency_ms = round((time.perf_counter() - t0) * 1000, 1)
+        logger.error(f"[chat:{request_id}] ERROR {type(e).__name__}: {e} latency={latency_ms}ms")
+        logger.error(traceback.format_exc())
+        return JSONResponse(
+            status_code=503,
+            content={
+                "status": "error",
+                "reply": "Sorry, something went wrong. Please try again shortly!",
+                "suggestions": ["Help", "Crop info"],
+                "mode": "fallback",
+                "requestId": request_id,
+            },
+        )
 
 
 # ✅ Print all registered routes on startup

@@ -32,6 +32,7 @@
 | 🔗 **Blockchain Marketplace** | Buy/sell crops securely via Ethereum smart contracts with full transaction traceability |
 | 👥 **Community Forum** | Post, comment, like, and share knowledge — with JWT auth and role-based access (Farmer/Buyer/Admin) |
 | 🔍 **Explainable AI (XAI)** | Grad-CAM heatmaps and SHAP feature explanations for model transparency |
+| 🤖 **AI Chatbot** | Rule-based XAI assistant — ask about crops, diseases, soil, prices, and how SmartCropX AI works (no API key needed) |
 | 📱 **Modern Responsive UI** | React + Tailwind CSS with smooth navigation, animated dashboard, and mobile-friendly design |
 
 ---
@@ -57,7 +58,9 @@
 SmartCropX/
 ├── backend/
 │   ├── main.py                  # FastAPI app with all routers
+│   ├── chatbot.py               # Rule-based XAI chatbot engine
 │   ├── start.py                 # Server entry point (port 8001)
+│   ├── .env.example             # Environment variable template
 │   ├── community/               # Community forum module
 │   │   ├── models.py            # SQLAlchemy models (User, Post, Comment, Like)
 │   │   ├── schemas.py           # Pydantic request/response schemas
@@ -126,6 +129,9 @@ python -m venv .venv
 source .venv/bin/activate
 
 pip install -r requirements.txt
+
+# (Optional) Create a .env file from the template
+cp .env.example .env   # edit if needed; chatbot works without any API keys
 ```
 
 ### 3. Start the Backend Server
@@ -134,6 +140,21 @@ pip install -r requirements.txt
 python start.py
 # Server runs at http://localhost:8001
 # API docs at http://localhost:8001/docs
+```
+
+### Quick Verification (curl)
+
+```bash
+# Health check
+curl http://localhost:8001/api/health
+
+# Chat with the AI assistant
+curl -X POST http://localhost:8001/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "hello", "sessionId": "test-1"}'
+
+# Chatbot health
+curl http://localhost:8001/api/chat/health
 ```
 
 ### 4. Frontend Setup
@@ -175,6 +196,20 @@ Base URL: `http://localhost:8001`
 | GET | `/weather` | Weather forecast & alerts |
 | POST | `/xai/gradcam` | Grad-CAM heatmap for disease prediction |
 | POST | `/xai/shap` | SHAP explanation for price prediction |
+
+### Chatbot Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/chat` | Send a message to the XAI chatbot (`{ "message": "...", "sessionId": "..." }`) |
+| GET | `/api/chat/health` | Chatbot sub-system health check |
+
+### Health Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/health` or `/api/health` | Basic health check |
+| GET | `/healthz` | Detailed health check (model status + chatbot) |
 
 ### Authentication Endpoints
 

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Bot, User, ChevronDown, Sparkles } from 'lucide-react';
 import axios from 'axios';
-import { API_URL } from '../config/api';
+import { API_URL, ENDPOINTS } from '../config/api';
 
 const XAIChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,13 +38,14 @@ const XAIChatbot = () => {
     setIsTyping(true);
 
     try {
-      const res = await axios.post(`${API_URL}/api/chat`, { message: text.trim() }, { timeout: 10000 });
+      const res = await axios.post(ENDPOINTS.CHAT, { message: text.trim() }, { timeout: 10000 });
       const data = res.data;
+      const modeLabel = data.mode === 'fallback' ? ' _(demo mode)_' : '';
       setMessages((prev) => [
         ...prev,
         {
           role: 'bot',
-          text: data.reply || "I'm not sure how to answer that.",
+          text: (data.reply || "I'm not sure how to answer that.") + modeLabel,
           suggestions: data.suggestions || [],
         },
       ]);

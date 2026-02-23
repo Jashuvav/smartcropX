@@ -36,6 +36,10 @@ export const ENDPOINTS = {
   EXPLAIN_SOIL: `${API_URL}/api/soil/explain`,
   EXPLAIN_PRICE: `${API_URL}/api/price/explain`,     // GET /{crop}
   EXPLAIN_PRICE_ALL: `${API_URL}/api/price/explain`,  // GET (all crops)
+  // Chatbot
+  CHAT: `${API_URL}/api/chat`,
+  CHAT_HEALTH: `${API_URL}/api/chat/health`,
+  API_HEALTH: `${API_URL}/api/health`,
 };
 
 export default API_CONFIG;
