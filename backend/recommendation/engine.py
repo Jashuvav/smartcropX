@@ -199,6 +199,18 @@ CROP_DB: list[dict] = [
         "k_min": 20, "k_max": 50,
         "soils": ["laterite", "red", "loamy"],
     },
+    {
+        "name": "Chilli",
+        "temp_min": 20, "temp_max": 35,
+        "rain_min": 50, "rain_max": 150,
+        "humidity_min": 50, "humidity_max": 80,
+        "ndvi_min": 0.30,
+        "ph_min": 6.0, "ph_max": 7.5,
+        "n_min": 50, "n_max": 100,
+        "p_min": 20, "p_max": 50,
+        "k_min": 20, "k_max": 50,
+        "soils": ["alluvial", "red", "black", "loamy", "sandy"],
+    },
 ]
 
 
@@ -345,6 +357,7 @@ SOIL_CROP_MAP: dict[str, list[dict]] = {
         {"crop": "Potato", "base": 0.78},
         {"crop": "Onion", "base": 0.75},
         {"crop": "Carrot", "base": 0.72},
+        {"crop": "Chilli", "base": 0.78},
     ],
     "black": [
         {"crop": "Cotton", "base": 0.95},
@@ -353,6 +366,7 @@ SOIL_CROP_MAP: dict[str, list[dict]] = {
         {"crop": "Sugarcane", "base": 0.85},
         {"crop": "Rice", "base": 0.80},
         {"crop": "Maize", "base": 0.78},
+        {"crop": "Chilli", "base": 0.82},
     ],
     "red": [
         {"crop": "Groundnut", "base": 0.94},
@@ -362,6 +376,7 @@ SOIL_CROP_MAP: dict[str, list[dict]] = {
         {"crop": "Tomato", "base": 0.80},
         {"crop": "Cotton", "base": 0.78},
         {"crop": "Coffee", "base": 0.75},
+        {"crop": "Chilli", "base": 0.80},
     ],
     "laterite": [
         {"crop": "Tea", "base": 0.95},
@@ -376,6 +391,7 @@ SOIL_CROP_MAP: dict[str, list[dict]] = {
         {"crop": "Maize", "base": 0.78},
         {"crop": "Potato", "base": 0.76},
         {"crop": "Tomato", "base": 0.74},
+        {"crop": "Chilli", "base": 0.76},
     ],
     "clay": [
         {"crop": "Rice", "base": 0.95},
@@ -395,6 +411,7 @@ SOIL_CROP_MAP: dict[str, list[dict]] = {
         {"crop": "Groundnut", "base": 0.78},
         {"crop": "Coffee", "base": 0.75},
         {"crop": "Tea", "base": 0.72},
+        {"crop": "Chilli", "base": 0.80},
     ],
 }
 

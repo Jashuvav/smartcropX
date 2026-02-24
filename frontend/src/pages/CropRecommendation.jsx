@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { API_URL } from '../config/api';
 import {
-  MapPin, Droplets, FlaskConical, Leaf, Sun, CloudRain,
+  MapPin, Droplets, FlaskConical, Leaf, CloudRain,
   Thermometer, BarChart3, Loader2, AlertCircle, Sprout, Satellite,
   ChevronDown, Search,
 } from 'lucide-react';
