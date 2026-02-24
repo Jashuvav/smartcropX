@@ -40,6 +40,10 @@ export const ENDPOINTS = {
   CHAT: `${API_URL}/api/chat`,
   CHAT_HEALTH: `${API_URL}/api/chat/health`,
   API_HEALTH: `${API_URL}/api/health`,
+  // Recommendation
+  RECOMMEND_CROP: `${API_URL}/api/recommend/crop`,
+  RECOMMEND_SOIL: `${API_URL}/api/recommend/soil`,
+  RECOMMEND_HEALTH: `${API_URL}/api/recommend/health`,
 };
 
 export default API_CONFIG;

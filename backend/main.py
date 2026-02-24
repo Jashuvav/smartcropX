@@ -52,7 +52,11 @@ except Exception as _chat_import_err:
 
 # ── Community module ────────────────────────────────────────────────
 from community.routes import router as community_router, auth_router, seed_if_empty
-from community.database import SessionLocal
+from community.database import SessionLocal, engine as _db_engine, Base as _db_base
+
+# ── Recommendation module ───────────────────────────────────────────
+from recommendation.routes import router as recommend_router
+from recommendation.models import CropRecommendationHistory  # ensure model registered
 
 # Global variables for lazy loading
 soil_model = None
@@ -157,6 +161,9 @@ app.mount("/graphs", StaticFiles(directory=GRAPH_DIR), name="graphs")
 # ✅ Include community & auth routers
 app.include_router(auth_router)
 app.include_router(community_router)
+
+# ✅ Include recommendation router
+app.include_router(recommend_router)
 
 # ✅ Mount community uploads (AFTER router registration)
 COMMUNITY_UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "community_uploads")
@@ -634,6 +641,13 @@ async def startup_event():
         logger.warning(f"⚠️ Model pre-loading failed: {e}")
         logger.info("📝 Models will be loaded on first use")
     
+    # Create recommendation history table
+    try:
+        _db_base.metadata.create_all(bind=_db_engine)
+        logger.info("✅ DB tables synced (recommendation history)")
+    except Exception as e:
+        logger.warning(f"⚠️ DB table creation failed: {e}")
+
     # Seed community DB
     try:
         db = SessionLocal()

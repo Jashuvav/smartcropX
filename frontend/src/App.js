@@ -21,6 +21,8 @@ import PostDetail from './pages/PostDetail';
 import { AuthProvider } from './context/AuthContext';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import XAIChatbot from './components/XAIChatbot';
+import CropRecommendation from './pages/CropRecommendation';
+import SoilRecommendation from './pages/SoilRecommendation';
 
 function App() {
   const [loaded, setLoaded] = useState(false);
@@ -81,6 +83,8 @@ function App() {
           <Route path="/community" element={<CommunityFeed />} />
           <Route path="/community/new" element={<CreatePost />} />
           <Route path="/community/post/:id" element={<PostDetail />} />
+          <Route path="/crop-recommendation" element={<CropRecommendation />} />
+          <Route path="/soil-recommendation" element={<SoilRecommendation />} />
           <Route path="/" element={
             <div className="content-container">
               <div className="scroll-reveal">

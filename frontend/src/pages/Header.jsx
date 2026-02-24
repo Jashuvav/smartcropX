@@ -58,6 +58,7 @@ const Header = () => {
   const menuItems = [
     { name: 'Home', icon: '🏠', path: '/' },
     { name: 'About Us', icon: 'ℹ️', path: '#aboutus' },
+    { name: 'Recommend', icon: '🌱', path: '/crop-recommendation', isRoute: true },
     { name: 'Community', icon: '👥', path: '/community', isRoute: true },
     { name: 'News', icon: '📰', path: '#news' },
     { name: 'Contact Us', icon: '✉️', path: '#contactus' }
