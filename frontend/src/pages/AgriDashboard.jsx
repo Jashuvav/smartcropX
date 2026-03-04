@@ -35,18 +35,9 @@ const AgriDashboard = () => {
         navigate('/SoilPredictor');
         break;
       case 5: 
-        navigate('/StorageForm');
-        break;
-      case 6: 
-        navigate('/Marketplace');
-        break;
-      case 7: 
         navigate('/community');
         break;
         default:
-          //SoilPredictor
-            // Marketplace
-            //StorageForm
         setActiveCard(cardId);
         break;
     }
@@ -100,28 +91,6 @@ const AgriDashboard = () => {
     },
     {
       id: 5,
-      title: "Storage",
-      description: "Monitor and optimize crop storage conditions",
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-12 h-12 text-smart-yellow group-hover:text-smart-green transition-colors duration-300">
-          <path d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-        </svg>
-      ),
-      notification: 0
-    },
-    {
-      id: 6,
-      title: "Marketplace",
-      description: "Buy and sell agricultural products online",
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-12 h-12 text-smart-yellow group-hover:text-smart-green transition-colors duration-300">
-          <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-        </svg>
-      ),
-      notification: 2
-    },
-    {
-      id: 7,
       title: "Community",
       description: "Connect with farmers, share knowledge & ask questions",
       icon: (

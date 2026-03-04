@@ -9,18 +9,14 @@ import ContactUs from './pages/ContactUs';
 import PlantDiseaseDetection from './pages/PlantDiseaseDetection';
 import MarketPrediction from './pages/MarketPrediction';
 import WeatherForecast from './pages/WeatherForecast';
-import StorageForm from "./components/StorageForm";  
-import Marketplace from "./components/Marketplace"; 
 import SoilPredictor from './pages/SoilPredictor';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import ApiTestPage from './pages/ApiTestPage';
 import CommunityFeed from './pages/CommunityFeed';
 import CreatePost from './pages/CreatePost';
 import PostDetail from './pages/PostDetail';
 import { AuthProvider } from './context/AuthContext';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import XAIChatbot from './components/XAIChatbot';
 import ProtectedRoute from './components/ProtectedRoute';
 import CropRecommendation from './pages/CropRecommendation';
 import SoilRecommendation from './pages/SoilRecommendation';
@@ -76,12 +72,9 @@ function App() {
           <Route path="/disease-detection" element={<ProtectedRoute roles={['FARMER','ADMIN']}><PlantDiseaseDetection /></ProtectedRoute>} />
           <Route path="/market-prediction" element={<ProtectedRoute roles={['FARMER','ADMIN']}><MarketPrediction /></ProtectedRoute>} />
           <Route path="/weather-prediction" element={<ProtectedRoute roles={['FARMER','ADMIN']}><WeatherForecast /></ProtectedRoute>} />
-          <Route path="/StorageForm" element={<ProtectedRoute roles={['BUYER','ADMIN']}><StorageForm /></ProtectedRoute>} />
-          <Route path="/Marketplace" element={<ProtectedRoute roles={['BUYER','ADMIN']}><Marketplace /></ProtectedRoute>} />
           <Route path="/LoginPage" element={<LoginPage />} />
           <Route path="/RegisterPage" element={<RegisterPage />} />
           <Route path="/SoilPredictor" element={<ProtectedRoute roles={['FARMER','ADMIN']}><SoilPredictor /></ProtectedRoute>} />
-          <Route path="/api-test" element={<ApiTestPage />} />
           <Route path="/community" element={<CommunityFeed />} />
           <Route path="/community/new" element={<CreatePost />} />
           <Route path="/community/post/:id" element={<PostDetail />} />
@@ -109,8 +102,6 @@ function App() {
           } />
         </Routes>
 
-        {/* Floating XAI Chatbot — visible on all pages */}
-        <XAIChatbot />
       </div>
     </Router>
     </AuthProvider>
