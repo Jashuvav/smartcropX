@@ -51,6 +51,13 @@ export function AuthProvider({ children }) {
     setUser(null);
   }, []);
 
+  // Role helpers
+  const role = user?.role || null;
+  const isAdmin = role === 'ADMIN';
+  const isFarmer = role === 'FARMER';
+  const isBuyer = role === 'BUYER';
+  const hasRole = (...roles) => roles.map(r => r.toUpperCase()).includes((role || '').toUpperCase());
+
   // Axios instance with auto Bearer header
   const authAxios = useCallback(() => {
     const instance = axios.create({ baseURL: API_URL });
@@ -61,7 +68,7 @@ export function AuthProvider({ children }) {
   }, [token]);
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, register, login, logout, authAxios }}>
+    <AuthContext.Provider value={{ user, token, loading, register, login, logout, authAxios, role, isAdmin, isFarmer, isBuyer, hasRole }}>
       {children}
     </AuthContext.Provider>
   );

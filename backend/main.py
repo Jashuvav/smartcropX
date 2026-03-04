@@ -2,7 +2,7 @@
 SmartCropX Backend API
 Main FastAPI application
 """
-from fastapi import FastAPI, File, UploadFile, Request
+from fastapi import FastAPI, File, UploadFile, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import os
@@ -53,10 +53,15 @@ except Exception as _chat_import_err:
 # ── Community module ────────────────────────────────────────────────
 from community.routes import router as community_router, auth_router, seed_if_empty
 from community.database import SessionLocal, engine as _db_engine, Base as _db_base
+from community.auth import require_role
+from community.models import User as _UserModel
 
 # ── Recommendation module ───────────────────────────────────────────
 from recommendation.routes import router as recommend_router
 from recommendation.models import CropRecommendationHistory  # ensure model registered
+
+# ── Pesticide module ────────────────────────────────────────────────
+from pesticide.routes import router as pesticide_router
 
 # Global variables for lazy loading
 soil_model = None
@@ -165,10 +170,19 @@ app.include_router(community_router)
 # ✅ Include recommendation router
 app.include_router(recommend_router)
 
+# ✅ Include pesticide router
+app.include_router(pesticide_router)
+
 # ✅ Mount community uploads (AFTER router registration)
 COMMUNITY_UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "community_uploads")
 os.makedirs(COMMUNITY_UPLOAD_DIR, exist_ok=True)
 app.mount("/community-images", StaticFiles(directory=COMMUNITY_UPLOAD_DIR), name="community-images")
+
+# ✅ Marketplace access guard  (RBAC: BUYER + ADMIN)
+@app.get("/api/marketplace/access")
+def marketplace_access(_user: _UserModel = Depends(require_role("BUYER", "ADMIN"))):
+    """Returns 200 if the caller has BUYER/ADMIN role, else 403."""
+    return {"access": True, "role": _user.role.value if hasattr(_user.role, 'value') else str(_user.role)}
 
 # ✅ Root endpoint
 @app.get("/")
@@ -206,9 +220,9 @@ def chat_health():
         "mode": "ai" if _chatbot_available else "fallback",
     }
 
-# ✅ Plant Disease Prediction
+# ✅ Plant Disease Prediction  (RBAC: FARMER + ADMIN)
 @app.post("/predict")
-async def predict(file: UploadFile = File(...)):
+async def predict(file: UploadFile = File(...), _user: _UserModel = Depends(require_role("FARMER", "ADMIN"))):
     try:
         # Load predictor on first use
         predict_func = load_plantdoc_predictor()
@@ -236,9 +250,9 @@ async def predict(file: UploadFile = File(...)):
             "confidence": 0.0
         }
 
-# ✅ Market Price Prediction
+# ✅ Market Price Prediction  (RBAC: FARMER + ADMIN)
 @app.get("/market-predictions")
-def get_predictions_for_graph():
+def get_predictions_for_graph(_user: _UserModel = Depends(require_role("FARMER", "ADMIN"))):
     try:
         # Load predictor on first use
         predict_func = load_price_predictor()
@@ -253,9 +267,9 @@ def get_predictions_for_graph():
             "data": []
         }
 
-# ✅ Weather Forecast (7-day ML prediction)
+# ✅ Weather Forecast (7-day ML prediction)  (RBAC: FARMER + ADMIN)
 @app.get("/weather-forecast")
-def weather_forecast():
+def weather_forecast(_user: _UserModel = Depends(require_role("FARMER", "ADMIN"))):
     try:
         from predict_weather import get_weather_forecast
         forecast = get_weather_forecast()
@@ -265,9 +279,9 @@ def weather_forecast():
         logger.error(traceback.format_exc())
         return {"status": "error", "message": str(e), "data": []}
 
-# ✅ Current Weather (live from OpenWeatherMap)
+# ✅ Current Weather (live from OpenWeatherMap)  (RBAC: FARMER + ADMIN)
 @app.get("/weather-current")
-def weather_current(city: str = "Cherrapunji"):
+def weather_current(city: str = "Cherrapunji", _user: _UserModel = Depends(require_role("FARMER", "ADMIN"))):
     try:
         from fetch_weather import get_weather
         data = get_weather(city)
@@ -278,9 +292,9 @@ def weather_current(city: str = "Cherrapunji"):
         logger.error(f"Current weather error: {str(e)}")
         return {"status": "error", "message": str(e), "data": None}
 
-# ✅ Weather Alerts
+# ✅ Weather Alerts  (RBAC: FARMER + ADMIN)
 @app.get("/weather-alerts")
-def weather_alerts():
+def weather_alerts(_user: _UserModel = Depends(require_role("FARMER", "ADMIN"))):
     try:
         from weather_alerts import check_weather_alerts
         alerts = check_weather_alerts()
@@ -316,7 +330,7 @@ soil_info = {
 }
 
 @app.post("/predict-soil")
-async def predict_soil(file: UploadFile = File(...)):
+async def predict_soil(file: UploadFile = File(...), _user: _UserModel = Depends(require_role("FARMER", "ADMIN"))):
     try:
         # Try to load model on first use
         try:
@@ -442,7 +456,7 @@ async def predict_soil(file: UploadFile = File(...)):
 
 # --- Disease: Grad-CAM heatmap + overlay ---
 @app.post("/api/disease/explain")
-async def explain_disease(file: UploadFile = File(...)):
+async def explain_disease(file: UploadFile = File(...), _user: _UserModel = Depends(require_role("FARMER", "ADMIN"))):
     """Return Grad-CAM heatmap, overlay, prediction and top regions for a plant image."""
     try:
         from xai_gradcam import explain_disease_image
@@ -472,7 +486,7 @@ async def explain_disease(file: UploadFile = File(...)):
 
 # --- Soil: Grad-CAM heatmap + rule-based features ---
 @app.post("/api/soil/explain")
-async def explain_soil_endpoint(file: UploadFile = File(...)):
+async def explain_soil_endpoint(file: UploadFile = File(...), _user: _UserModel = Depends(require_role("FARMER", "ADMIN"))):
     """Return Grad-CAM heatmap for soil image + rule-based feature explanation."""
     try:
         from xai_gradcam import explain_soil_image
@@ -511,7 +525,7 @@ async def explain_soil_endpoint(file: UploadFile = File(...)):
 
 # --- Price: SHAP feature importance for a single crop ---
 @app.get("/api/price/explain/{crop}")
-def explain_price_endpoint(crop: str):
+def explain_price_endpoint(crop: str, _user: _UserModel = Depends(require_role("FARMER", "ADMIN"))):
     """Return SHAP top-5 feature importances for the given crop's price model."""
     try:
         from xai_shap import explain_price
@@ -532,7 +546,7 @@ def explain_price_endpoint(crop: str):
 
 # --- Price: SHAP for ALL crops at once ---
 @app.get("/api/price/explain")
-def explain_all_prices_endpoint():
+def explain_all_prices_endpoint(_user: _UserModel = Depends(require_role("FARMER", "ADMIN"))):
     """Return SHAP explanations for all supported crops."""
     try:
         from xai_shap import explain_all_prices

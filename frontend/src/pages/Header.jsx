@@ -59,6 +59,7 @@ const Header = () => {
     { name: 'Home', icon: '🏠', path: '/' },
     { name: 'About Us', icon: 'ℹ️', path: '#aboutus' },
     { name: 'Recommend', icon: '🌱', path: '/crop-recommendation', isRoute: true },
+    { name: 'Pesticide', icon: '🧪', path: '/pesticide-recommendation', isRoute: true },
     { name: 'Community', icon: '👥', path: '/community', isRoute: true },
     { name: 'News', icon: '📰', path: '#news' },
     { name: 'Contact Us', icon: '✉️', path: '#contactus' }
@@ -140,6 +141,12 @@ const Header = () => {
   {user ? (
     <>
       <span className="text-green-200 text-sm">Hi, {user.full_name?.split(' ')[0]}</span>
+      <span className="text-xs px-2 py-0.5 rounded-full font-semibold border border-green-400/40" style={{
+        backgroundColor: user.role === 'ADMIN' ? '#dc2626' : user.role === 'BUYER' ? '#2563eb' : '#16a34a',
+        color: '#fff',
+      }}>
+        {user.role === 'ADMIN' ? '🛡 ADMIN' : user.role === 'BUYER' ? '🛒 BUYER' : '🌾 FARMER'}
+      </span>
       <button onClick={logout} className="bg-red-600 hover:bg-red-500 px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-400">
         Logout
       </button>
@@ -195,9 +202,19 @@ const Header = () => {
           ))}
           <li className="mt-4 px-4 pb-4">
             {user ? (
-              <button onClick={logout} className="w-full bg-red-600 hover:bg-red-500 py-3 rounded-lg text-sm font-medium transition-all duration-300 hover:shadow-lg transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-400">
-                Logout ({user.full_name?.split(' ')[0]})
-              </button>
+              <div className="space-y-2">
+                <div className="text-center">
+                  <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{
+                    backgroundColor: user.role === 'ADMIN' ? '#dc2626' : user.role === 'BUYER' ? '#2563eb' : '#16a34a',
+                    color: '#fff',
+                  }}>
+                    {user.role === 'ADMIN' ? '🛡 ADMIN' : user.role === 'BUYER' ? '🛒 BUYER' : '🌾 FARMER'}
+                  </span>
+                </div>
+                <button onClick={logout} className="w-full bg-red-600 hover:bg-red-500 py-3 rounded-lg text-sm font-medium transition-all duration-300 hover:shadow-lg transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-400">
+                  Logout ({user.full_name?.split(' ')[0]})
+                </button>
+              </div>
             ) : (
               <Link to="/LoginPage">
                 <button className="w-full bg-green-600 hover:bg-green-500 py-3 rounded-lg text-sm font-medium transition-all duration-300 hover:shadow-lg transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-400">

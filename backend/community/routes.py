@@ -23,7 +23,7 @@ from .schemas import (
 )
 from .auth import (
     hash_password, verify_password, create_access_token,
-    get_current_user, require_auth,
+    get_current_user, require_auth, require_role,
 )
 
 logger = logging.getLogger(__name__)

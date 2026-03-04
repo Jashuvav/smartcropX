@@ -44,6 +44,11 @@ export const ENDPOINTS = {
   RECOMMEND_CROP: `${API_URL}/api/recommend/crop`,
   RECOMMEND_SOIL: `${API_URL}/api/recommend/soil`,
   RECOMMEND_HEALTH: `${API_URL}/api/recommend/health`,
+  // Pesticide
+  PESTICIDE_RECOMMEND: `${API_URL}/api/pesticide/recommend`,
+  PESTICIDE_DISEASES: `${API_URL}/api/pesticide/diseases`,
+  PESTICIDE_CROPS: `${API_URL}/api/pesticide/crops`,
+  PESTICIDE_HEALTH: `${API_URL}/api/pesticide/health`,
 };
 
 export default API_CONFIG;

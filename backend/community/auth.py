@@ -67,3 +67,25 @@ def require_auth(
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
     return user
+
+
+def require_role(*allowed_roles: str):
+    """
+    FastAPI dependency factory.
+    Usage:  user: User = Depends(require_role("ADMIN"))
+            user: User = Depends(require_role("FARMER", "ADMIN"))
+    """
+    from .models import Role  # deferred to avoid circular import at module level
+
+    allowed = {r.upper() for r in allowed_roles}
+
+    def _check(user: User = Depends(require_auth)) -> User:
+        user_role = user.role.value if hasattr(user.role, "value") else str(user.role)
+        if user_role.upper() not in allowed:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Role '{user_role}' is not authorised. Required: {', '.join(sorted(allowed))}",
+            )
+        return user
+
+    return _check

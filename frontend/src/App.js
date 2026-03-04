@@ -21,8 +21,10 @@ import PostDetail from './pages/PostDetail';
 import { AuthProvider } from './context/AuthContext';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import XAIChatbot from './components/XAIChatbot';
+import ProtectedRoute from './components/ProtectedRoute';
 import CropRecommendation from './pages/CropRecommendation';
 import SoilRecommendation from './pages/SoilRecommendation';
+import PesticideRecommendation from './pages/PesticideRecommendation';
 
 function App() {
   const [loaded, setLoaded] = useState(false);
@@ -71,20 +73,21 @@ function App() {
         </div>
         
         <Routes>
-          <Route path="/disease-detection" element={<PlantDiseaseDetection />} />
-          <Route path="/market-prediction" element={<MarketPrediction />} />
-          <Route path="/weather-prediction" element={<WeatherForecast />} />
-          <Route path="/StorageForm" element={<StorageForm />} />
-          <Route path="/Marketplace" element={<Marketplace />} />
+          <Route path="/disease-detection" element={<ProtectedRoute roles={['FARMER','ADMIN']}><PlantDiseaseDetection /></ProtectedRoute>} />
+          <Route path="/market-prediction" element={<ProtectedRoute roles={['FARMER','ADMIN']}><MarketPrediction /></ProtectedRoute>} />
+          <Route path="/weather-prediction" element={<ProtectedRoute roles={['FARMER','ADMIN']}><WeatherForecast /></ProtectedRoute>} />
+          <Route path="/StorageForm" element={<ProtectedRoute roles={['BUYER','ADMIN']}><StorageForm /></ProtectedRoute>} />
+          <Route path="/Marketplace" element={<ProtectedRoute roles={['BUYER','ADMIN']}><Marketplace /></ProtectedRoute>} />
           <Route path="/LoginPage" element={<LoginPage />} />
           <Route path="/RegisterPage" element={<RegisterPage />} />
-          <Route path="/SoilPredictor" element={<SoilPredictor />} />
+          <Route path="/SoilPredictor" element={<ProtectedRoute roles={['FARMER','ADMIN']}><SoilPredictor /></ProtectedRoute>} />
           <Route path="/api-test" element={<ApiTestPage />} />
           <Route path="/community" element={<CommunityFeed />} />
           <Route path="/community/new" element={<CreatePost />} />
           <Route path="/community/post/:id" element={<PostDetail />} />
           <Route path="/crop-recommendation" element={<CropRecommendation />} />
           <Route path="/soil-recommendation" element={<SoilRecommendation />} />
+          <Route path="/pesticide-recommendation" element={<PesticideRecommendation />} />
           <Route path="/" element={
             <div className="content-container">
               <div className="scroll-reveal">
