@@ -7,7 +7,6 @@ import Dashboard from './pages/AgriDashboard';
 import News from './pages/AgriNewsSection';
 import ContactUs from './pages/ContactUs';
 import PlantDiseaseDetection from './pages/PlantDiseaseDetection';
-import MarketPrediction from './pages/MarketPrediction';
 import WeatherForecast from './pages/WeatherForecast';
 import SoilPredictor from './pages/SoilPredictor';
 import LoginPage from './pages/LoginPage';
@@ -21,6 +20,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import CropRecommendation from './pages/CropRecommendation';
 import SoilRecommendation from './pages/SoilRecommendation';
 import PesticideRecommendation from './pages/PesticideRecommendation';
+import AllNews from './pages/AllNews';
 
 function App() {
   const [loaded, setLoaded] = useState(false);
@@ -69,9 +69,8 @@ function App() {
         </div>
         
         <Routes>
-          <Route path="/disease-detection" element={<ProtectedRoute roles={['FARMER','ADMIN']}><PlantDiseaseDetection /></ProtectedRoute>} />
-          <Route path="/market-prediction" element={<ProtectedRoute roles={['FARMER','ADMIN']}><MarketPrediction /></ProtectedRoute>} />
-          <Route path="/weather-prediction" element={<ProtectedRoute roles={['FARMER','ADMIN']}><WeatherForecast /></ProtectedRoute>} />
+          <Route path="/disease-detection" element={<ProtectedRoute roles={['FARMER','AGRONOMIST','ADMIN']}><PlantDiseaseDetection /></ProtectedRoute>} />
+          <Route path="/weather-prediction" element={<ProtectedRoute roles={['FARMER','AGRONOMIST','ADMIN']}><WeatherForecast /></ProtectedRoute>} />
           <Route path="/LoginPage" element={<LoginPage />} />
           <Route path="/RegisterPage" element={<RegisterPage />} />
           <Route path="/SoilPredictor" element={<ProtectedRoute roles={['FARMER','ADMIN']}><SoilPredictor /></ProtectedRoute>} />
@@ -80,16 +79,17 @@ function App() {
           <Route path="/community/post/:id" element={<PostDetail />} />
           <Route path="/crop-recommendation" element={<CropRecommendation />} />
           <Route path="/soil-recommendation" element={<SoilRecommendation />} />
-          <Route path="/pesticide-recommendation" element={<PesticideRecommendation />} />
+          <Route path="/pesticide-recommendation" element={<ProtectedRoute roles={['FARMER','ADMIN']}><PesticideRecommendation /></ProtectedRoute>} />
+          <Route path="/news" element={<AllNews />} />
           <Route path="/" element={
             <div className="content-container">
               <div className="scroll-reveal">
                 <HeroSection />
               </div>
-              <div className="scroll-reveal">
+              <div id="agriinfo" className="scroll-reveal">
                 <Agriinfo />
               </div>
-              <div className="scroll-reveal">
+              <div id="dashboard" className="scroll-reveal">
                 <Dashboard />
               </div>
               <div className="scroll-reveal">

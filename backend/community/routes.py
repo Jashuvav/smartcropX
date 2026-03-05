@@ -44,17 +44,29 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @auth_router.post("/register", response_model=TokenResponse, status_code=201)
 def register(req: RegisterRequest, db: Session = Depends(get_db)):
+    # Normalise role to uppercase to be safe
+    role_str = (req.role or "FARMER").upper().strip()
+    if role_str not in ("FARMER", "AGRONOMIST", "ADMIN"):
+        raise HTTPException(status_code=400, detail=f"Invalid role '{req.role}'. Must be FARMER, AGRONOMIST or ADMIN.")
+
     if db.query(User).filter(User.email == req.email).first():
-        raise HTTPException(status_code=400, detail="Email already registered")
-    user = User(
-        full_name=req.full_name,
-        email=req.email,
-        hashed_password=hash_password(req.password),
-        role=Role(req.role),
-    )
-    db.add(user)
-    db.commit()
-    db.refresh(user)
+        raise HTTPException(status_code=409, detail="User already exists. Please login.")
+
+    try:
+        user = User(
+            full_name=req.full_name.strip(),
+            email=req.email.strip().lower(),
+            hashed_password=hash_password(req.password),
+            role=Role(role_str),
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+    except Exception as exc:
+        db.rollback()
+        logger.error("Registration DB error: %s", exc)
+        raise HTTPException(status_code=500, detail="Registration failed – please try again.") from exc
+
     token = create_access_token({"sub": user.id, "role": user.role.value})
     return TokenResponse(
         access_token=token,
@@ -64,7 +76,8 @@ def register(req: RegisterRequest, db: Session = Depends(get_db)):
 
 @auth_router.post("/login", response_model=TokenResponse)
 def login(req: LoginRequest, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.email == req.email).first()
+    email = (req.email or "").strip().lower()
+    user = db.query(User).filter(User.email == email).first()
     if not user or not verify_password(req.password, user.hashed_password):
         raise HTTPException(status_code=401, detail="Invalid email or password")
     token = create_access_token({"sub": user.id, "role": user.role.value})
@@ -354,23 +367,23 @@ def seed_if_empty(db: Session):
 
     demo = User(
         id="seed_farmer_01",
-        full_name="Rajesh Kumar",
-        email="rajesh@smartcropx.demo",
-        hashed_password=hash_password("password123"),
+        full_name="Farmer User",
+        email="farmer@smartcropx.com",
+        hashed_password=hash_password("Farmer@123"),
         role=Role.FARMER,
     )
     demo2 = User(
-        id="seed_buyer_01",
-        full_name="Priya Sharma",
-        email="priya@smartcropx.demo",
-        hashed_password=hash_password("password123"),
-        role=Role.BUYER,
+        id="seed_agronomist_01",
+        full_name="Agronomist User",
+        email="agronomist@smartcropx.com",
+        hashed_password=hash_password("Agro@123"),
+        role=Role.AGRONOMIST,
     )
     admin = User(
         id="seed_admin_01",
         full_name="Admin User",
-        email="admin@smartcropx.demo",
-        hashed_password=hash_password("admin123"),
+        email="admin@smartcropx.com",
+        hashed_password=hash_password("Admin@123"),
         role=Role.ADMIN,
     )
     db.add_all([demo, demo2, admin])
@@ -426,7 +439,7 @@ def seed_if_empty(db: Session):
             "title": "Welcome to the SmartCropX Community!",
             "body": (
                 "This is your space to share farming knowledge, ask questions, "
-                "find buyers & sellers, and stay updated on agricultural best practices. "
+                "connect with agronomists, and stay updated on agricultural best practices. "
                 "Please be respectful to fellow members. Happy farming! 🌾"
             ),
             "tags": "announcement,welcome",

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ENDPOINTS } from '../config/api';
+import { useAuth } from '../context/AuthContext';
 
 function SoilPredictor() {
+  const { authAxios } = useAuth();
   const [file, setFile] = useState(null);
   const [result, setResult] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -53,7 +55,8 @@ function SoilPredictor() {
     formData.append("file", file);
 
     try {
-      const res = await axios.post(ENDPOINTS.PREDICT_SOIL, formData, {
+      const api = authAxios();
+      const res = await api.post(ENDPOINTS.PREDICT_SOIL, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -65,10 +68,10 @@ function SoilPredictor() {
       if (res.data.error || res.data.message === "Error analyzing image") {
         setResult({
           error: true,
-          message: res.data.error || "Soil analysis temporarily unavailable",
-          prediction: "Service Update In Progress",
+          message: res.data.error || "Soil analysis failed",
+          prediction: "Analysis Error",
           confidence: 0,
-          notes: "The soil analysis AI is being updated for better compatibility. Our team is working to resolve this issue. Please try again in a few minutes, or contact support if the problem persists.",
+          notes: "Could not analyse the soil image. Please try again with a clearer photo.",
           crops: [],
           care: []
         });
@@ -115,7 +118,8 @@ function SoilPredictor() {
     const formData = new FormData();
     formData.append("file", file);
     try {
-      const res = await axios.post(ENDPOINTS.EXPLAIN_SOIL, formData, {
+      const api = authAxios();
+      const res = await api.post(ENDPOINTS.EXPLAIN_SOIL, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       setXaiResult(res.data);
@@ -130,26 +134,6 @@ function SoilPredictor() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100 py-12 px-4 sm:px-6">
-      {/* Service Status Banner */}
-      <div className="max-w-3xl mx-auto mb-6">
-        <div className="bg-yellow-100 border border-yellow-300 rounded-lg p-4 shadow-sm">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <span className="text-yellow-600 text-xl">⚠️</span>
-            </div>
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-yellow-800">
-                Service Update Notice
-              </h3>
-              <p className="text-sm text-yellow-700 mt-1">
-                We're currently updating our soil analysis AI for better accuracy. 
-                If you encounter any issues, please try our other features or check back in a few minutes.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
         <div className="bg-smart-green text-white py-6 px-8 rounded-t-2xl">
           <h2 className="text-3xl font-bold flex items-center">
@@ -262,24 +246,6 @@ function SoilPredictor() {
                     {result.error ? 'What happened:' : 'About this soil:'}
                   </h4>
                   <p className={`mt-2 ${result.error ? 'text-red-600' : 'text-gray-600'}`}>{result.notes}</p>
-                  {result.error && (
-                    <div className="mt-3 p-3 bg-yellow-100 border border-yellow-300 rounded-lg">
-                      <h5 className="font-semibold text-yellow-800">💡 What's happening?</h5>
-                      <div className="mt-2 text-yellow-700 text-sm space-y-2">
-                        <p><strong>Current Status:</strong> The soil analysis AI model is being updated for better compatibility with our servers.</p>
-                        <p><strong>What you can do:</strong></p>
-                        <ul className="ml-4 space-y-1">
-                          <li>• Try the Plant Disease Detection feature instead</li>
-                          <li>• Check the Market Prediction for crop pricing</li>
-                          <li>• Try again in 10-15 minutes</li>
-                          <li>• If the issue persists, contact our support team</li>
-                        </ul>
-                        <p className="mt-2 text-xs text-yellow-600">
-                          <strong>Technical note:</strong> We're resolving TensorFlow model compatibility issues on our servers.
-                        </p>
-                      </div>
-                    </div>
-                  )}
                 </div>
               )}
 

@@ -48,6 +48,10 @@ const RegisterPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.fullName.trim() || !formData.email.trim() || !formData.password) {
+      setError('Please fill in all fields');
+      return;
+    }
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       return;
@@ -58,7 +62,12 @@ const RegisterPage = () => {
       await authRegister(formData.fullName, formData.email, formData.password, formData.role);
       setStep(3);
     } catch (err) {
-      setError(err.response?.data?.detail || 'Registration failed');
+      if (err.status === 409) {
+        setError('This email is already registered. Redirecting to login…');
+        setTimeout(() => navigate('/LoginPage'), 1500);
+      } else {
+        setError(err.message || 'Registration failed');
+      }
     } finally {
       setIsAnimating(false);
     }
@@ -175,7 +184,7 @@ const RegisterPage = () => {
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-smart-yellow focus:border-transparent transition-all duration-300"
                   >
                     <option value="FARMER">Farmer</option>
-                    <option value="BUYER">Buyer</option>
+                    <option value="AGRONOMIST">Agronomist</option>
                   </select>
                 </div>
 
@@ -191,6 +200,16 @@ const RegisterPage = () => {
 
             {step === 2 && (
               <form onSubmit={handleSubmit} className="space-y-6">
+                {error && (
+                  <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+                    {error}
+                    {error.includes('already registered') && (
+                      <Link to="/LoginPage" className="block mt-2 text-smart-green font-medium hover:text-smart-yellow transition-colors duration-300">
+                        Go to Login →
+                      </Link>
+                    )}
+                  </div>
+                )}
                 {/* Password Field */}
                 <div className="space-y-2">
                   <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
@@ -319,7 +338,7 @@ const RegisterPage = () => {
 
           {/* Footer */}
           <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 text-center text-xs text-gray-500">
-            &copy; 2025 Smart Solution. All rights reserved.
+            &copy; 2026 Smart Solution. All rights reserved.
           </div>
         </div>
 

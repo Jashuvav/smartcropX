@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const AgriDashboard = () => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [activeCard, setActiveCard] = useState(null);
-  const [isHovering, setIsHovering] = useState(false);
   const [weatherData, setWeatherData] = useState({ temp: 28, humidity: 65 });
   const navigate = useNavigate();
+  const { user } = useAuth();
   
   useEffect(() => {
     setIsLoaded(true);
@@ -22,77 +22,93 @@ const AgriDashboard = () => {
   
   const handleCardClick = (cardId) => {
     switch(cardId) {
-        case 1: 
-        navigate('/market-prediction');
+      case 1:
+        navigate('/crop-recommendation');
         break;
-      case 2: 
-        navigate('/disease-detection');
+      case 2:
+        navigate('/pesticide-recommendation');
         break;
       case 3: 
-        navigate('/weather-prediction');
+        navigate('/disease-detection');
         break;
       case 4: 
-        navigate('/SoilPredictor');
+        navigate('/weather-prediction');
         break;
       case 5: 
+        navigate('/SoilPredictor');
+        break;
+      case 6: 
         navigate('/community');
         break;
-        default:
-        setActiveCard(cardId);
+      default:
         break;
     }
   };
   
-  const dashboardCards = [
+  const allCards = [
     {
       id: 1,
-      title: "Market Prediction",
-      description: "Forecast prices for crops using AI algorithms",
+      title: "Crop Recommendation",
+      description: "AI-powered crop suggestions based on your soil, weather & location",
+      roles: ['FARMER', 'AGRONOMIST', 'ADMIN'],
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-12 h-12 text-smart-yellow group-hover:text-smart-green transition-colors duration-300">
-          <path d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
+          <path d="M12 22c4-4 8-7.5 8-12a8 8 0 10-16 0c0 4.5 4 8 8 12z" />
+          <path d="M12 8v4" />
+          <path d="M12 16h.01" />
         </svg>
       ),
-      notification: 3
     },
     {
       id: 2,
+      title: "Pesticide Recommendation",
+      description: "Get expert pesticide advice based on disease and crop type",
+      roles: ['FARMER', 'ADMIN'],
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-12 h-12 text-smart-yellow group-hover:text-smart-green transition-colors duration-300">
+          <path d="M9 3h6v2H9zM12 5v6M7 11h10l1 11H6l1-11z" />
+        </svg>
+      ),
+    },
+    {
+      id: 3,
       title: "Plant Disease Detection",
       description: "Identify plant diseases using image processing",
+      roles: ['FARMER', 'AGRONOMIST', 'ADMIN'],
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-12 h-12 text-smart-yellow group-hover:text-smart-green transition-colors duration-300">
           <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
           <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
         </svg>
       ),
-      notification: 1
     },
     {
-      id: 3,
+      id: 4,
       title: "Weather Prediction",
       description: "Real-time weather forecasts for your farm location",
+      roles: ['FARMER', 'AGRONOMIST', 'ADMIN'],
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-12 h-12 text-smart-yellow group-hover:text-smart-green transition-colors duration-300">
           <path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
         </svg>
       ),
-      notification: 0
     },
     {
-      id: 4,
-      title: "Soil Dectection",
-      description: "Know what plant to plant on you soil",
+      id: 5,
+      title: "Soil Detection",
+      description: "Know what crops to plant based on your soil type",
+      roles: ['FARMER', 'ADMIN'],
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-12 h-12 text-smart-yellow group-hover:text-smart-green transition-colors duration-300">
           <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
         </svg>
       ),
-      notification: 5
     },
     {
-      id: 5,
+      id: 6,
       title: "Community",
       description: "Connect with farmers, share knowledge & ask questions",
+      roles: ['FARMER', 'AGRONOMIST', 'ADMIN'],
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-12 h-12 text-smart-yellow group-hover:text-smart-green transition-colors duration-300">
           <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
@@ -101,9 +117,12 @@ const AgriDashboard = () => {
           <path d="M16 3.13a4 4 0 010 7.75" />
         </svg>
       ),
-      notification: 0
     }
   ];
+
+  // Role-based card filtering
+  const userRole = (user?.role || 'FARMER').toUpperCase();
+  const dashboardCards = allCards.filter(card => card.roles.includes(userRole));
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-b from-smart-green to-green-900 p-6 overflow-hidden">
@@ -155,63 +174,34 @@ const AgriDashboard = () => {
           </div>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
           {dashboardCards.map((card, index) => (
-            <div 
+            <div
               key={card.id}
-              className="group bg-gray-800 bg-opacity-25 backdrop-blur-sm rounded-lg p-6 flex flex-col items-center transition-all duration-500 hover:bg-smart-yellow hover:text-smart-green cursor-pointer relative shadow-lg hover:shadow-xl hover:-translate-y-1 overflow-hidden"
-              onMouseEnter={() => {
-                setActiveCard(card.id);
-                setIsHovering(true);
-              }}
-              onMouseLeave={() => {
-                setActiveCard(null);
-                setIsHovering(false);
-              }}
+              className="cursor-pointer"
               onClick={() => handleCardClick(card.id)}
-              style={{ 
+              style={{
                 transform: isLoaded ? 'translateY(0)' : 'translateY(50px)',
                 opacity: isLoaded ? 1 : 0,
-                transitionDelay: `${index * 100}ms`
+                transition: 'transform 0.5s ease-out, opacity 0.5s ease-out',
+                transitionDelay: `${index * 100}ms`,
               }}
             >
-              <div 
-                className="absolute inset-0 bg-smart-yellow opacity-0 group-hover:opacity-10 transition-opacity duration-500 rounded-full scale-0 group-hover:scale-150"
-                style={{
-                  transformOrigin: 'center',
-                  transition: 'transform 0.5s ease-out, opacity 0.5s ease-out'
-                }}
-              ></div>
-              
-              {card.notification > 0 && (
-                <div className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
-                  {card.notification}
+              <div className="group flex flex-col items-center justify-center p-6 bg-gray-900/80 border border-gray-700 rounded-xl transition-all duration-200 hover:shadow-lg hover:scale-[1.01]">
+                <div className="w-16 h-16 mb-4 flex items-center justify-center">
+                  {card.icon}
                 </div>
-              )}
-              
-              <div className="w-16 h-16 mb-4 flex items-center justify-center relative">
-                {card.icon}
-                <svg 
-                  className="absolute inset-0 w-full h-full text-smart-yellow opacity-0 group-hover:opacity-20 transition-all duration-700 transform rotate-0 group-hover:rotate-180" 
-                  viewBox="0 0 100 100"
-                >
-                  <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="8" fill="none" />
-                </svg>
-              </div>
-              
-              <h3 className="font-bold text-lg text-center text-white group-hover:text-smart-green transition-colors duration-300 mb-2">{card.title}</h3>
-              
-              <p className="text-gray-300 text-sm text-center mt-1 transition-all duration-500 max-h-0 group-hover:max-h-20 opacity-0 group-hover:opacity-100 overflow-hidden">
-                {card.description}
-              </p>
-              
-              <div className="mt-4 w-full opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
-                <button className="w-full py-1 px-3 bg-smart-green text-white text-sm rounded transition-all duration-300 hover:bg-opacity-90 flex items-center justify-center">
-                  <span>Open</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                </button>
+                <h3 className="font-bold text-lg text-center text-smart-yellow mb-2">
+                  {card.title}
+                </h3>
+                <p className="text-gray-300 text-sm text-center px-2">
+                  {card.description}
+                </p>
+                <div className="mt-4 w-3/4">
+                  <span className="block w-full py-1.5 px-3 bg-smart-green text-white text-sm rounded text-center hover:bg-opacity-90 transition-all duration-300">
+                    Open →
+                  </span>
+                </div>
               </div>
             </div>
           ))}

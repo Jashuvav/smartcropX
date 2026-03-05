@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Cloud, Sun, Sunrise, Sunset, Moon, Wind, Droplets, ThermometerSun, Umbrella, CloudRain, CloudLightning, CloudSnow } from 'lucide-react';
 import axios from 'axios';
 import { ENDPOINTS } from '../config/api';
+import { useAuth } from '../context/AuthContext';
 
 const fallbackWeatherData = [
   {
@@ -112,6 +113,7 @@ const fallbackWeatherData = [
 ];
 
 const WeatherForecast = () => {
+  const { authAxios } = useAuth();
   const [selectedDay, setSelectedDay] = useState(null);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [animateCloud, setAnimateCloud] = useState(false);
@@ -129,7 +131,8 @@ const WeatherForecast = () => {
   useEffect(() => {
     const fetchForecast = async () => {
       try {
-        const response = await axios.get(ENDPOINTS.WEATHER_FORECAST);
+        const api = authAxios();
+        const response = await api.get(ENDPOINTS.WEATHER_FORECAST);
         if (response.data && response.data.status === 'success' && response.data.data.length > 0) {
           setWeatherData(response.data.data);
           setIsLive(true);

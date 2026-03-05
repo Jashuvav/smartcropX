@@ -141,7 +141,7 @@ const PostDetail = () => {
             {post.author?.role && (
               <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase ${
                 post.author.role === 'ADMIN' ? 'bg-purple-100 text-purple-700'
-                : post.author.role === 'BUYER' ? 'bg-blue-100 text-blue-700'
+                : post.author.role === 'AGRONOMIST' ? 'bg-blue-100 text-blue-700'
                 : 'bg-green-100 text-green-700'
               }`}>{post.author.role}</span>
             )}

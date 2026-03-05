@@ -24,13 +24,21 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.email.trim() || !formData.password) {
+      setError('Please fill in all fields');
+      return;
+    }
     setIsAnimating(true);
     setError('');
     try {
-      await login(formData.email, formData.password);
-      navigate('/');
+      const data = await login(formData.email, formData.password);
+      // Role-based redirect
+      const role = (data.user?.role || '').toUpperCase();
+      if (role === 'ADMIN') navigate('/');
+      else if (role === 'AGRONOMIST') navigate('/');
+      else navigate('/');          // FARMER → dashboard (home)
     } catch (err) {
-      setError(err.response?.data?.detail || 'Login failed. Check your credentials.');
+      setError(err.message || 'Login failed. Check your credentials.');
     } finally {
       setIsAnimating(false);
     }
@@ -154,7 +162,7 @@ const LoginPage = () => {
 
           {/* Footer */}
           <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 text-center text-xs text-gray-500">
-            &copy; 2025 Smart Solution. All rights reserved.
+            &copy; 2026 Smart Solution. All rights reserved.
           </div>
         </div>
       </div>

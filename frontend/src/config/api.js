@@ -25,7 +25,6 @@ export const API_URL = API_CONFIG.getApiUrl();
 export const ENDPOINTS = {
   PREDICT_DISEASE: `${API_URL}/predict`,
   PREDICT_SOIL: `${API_URL}/predict-soil`,
-  MARKET_PREDICTIONS: `${API_URL}/market-predictions`,
   WEATHER_FORECAST: `${API_URL}/weather-forecast`,
   WEATHER_CURRENT: `${API_URL}/weather-current`,
   WEATHER_ALERTS: `${API_URL}/weather-alerts`,
@@ -34,8 +33,6 @@ export const ENDPOINTS = {
   // XAI – Explainable AI endpoints
   EXPLAIN_DISEASE: `${API_URL}/api/disease/explain`,
   EXPLAIN_SOIL: `${API_URL}/api/soil/explain`,
-  EXPLAIN_PRICE: `${API_URL}/api/price/explain`,     // GET /{crop}
-  EXPLAIN_PRICE_ALL: `${API_URL}/api/price/explain`,  // GET (all crops)
   // Recommendation
   RECOMMEND_CROP: `${API_URL}/api/recommend/crop`,
   RECOMMEND_SOIL: `${API_URL}/api/recommend/soil`,

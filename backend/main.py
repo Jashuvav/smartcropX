@@ -56,7 +56,6 @@ from pesticide.routes import router as pesticide_router
 soil_model = None
 class_names = None
 plantdoc_predict_func = None
-price_predict_func = None
 
 app = FastAPI(title="SmartCropX API", version="1.0.0")
 
@@ -120,19 +119,7 @@ def load_plantdoc_predictor():
     
     return plantdoc_predict_func
 
-def load_price_predictor():
-    """Load price predictor lazily"""
-    global price_predict_func
-    if price_predict_func is None:
-        try:
-            from predict_with_graph import get_price_predictions
-            price_predict_func = get_price_predictions
-            logger.info("Loaded price predictor")
-        except Exception as e:
-            logger.error(f"Failed to load price predictor: {str(e)}")
-            raise e
-    
-    return price_predict_func
+
 
 # ✅ CORS for frontend
 app.add_middleware(
@@ -188,14 +175,36 @@ def health_check_detailed():
         "models": {
             "soil_model": soil_model is not None,
             "plantdoc_predictor": plantdoc_predict_func is not None,
-            "price_predictor": price_predict_func is not None
         },
     }
     return status
 
+@app.get("/api/db/health")
+def db_health_check():
+    """Check database connectivity and return table stats."""
+    try:
+        db = SessionLocal()
+        from community.models import User, Post, Comment
+        user_count = db.query(User).count()
+        post_count = db.query(Post).count()
+        comment_count = db.query(Comment).count()
+        db.close()
+        return {
+            "status": "healthy",
+            "database": "SQLite",
+            "tables": {
+                "users": user_count,
+                "posts": post_count,
+                "comments": comment_count,
+            },
+        }
+    except Exception as e:
+        logger.error(f"DB health check failed: {e}")
+        return {"status": "unhealthy", "error": str(e)}
+
 # ✅ Plant Disease Prediction  (RBAC: FARMER + ADMIN)
 @app.post("/predict")
-async def predict(file: UploadFile = File(...), _user: _UserModel = Depends(require_role("FARMER", "ADMIN"))):
+async def predict(file: UploadFile = File(...), _user: _UserModel = Depends(require_role("FARMER", "AGRONOMIST", "ADMIN"))):
     try:
         # Load predictor on first use
         predict_func = load_plantdoc_predictor()
@@ -223,26 +232,10 @@ async def predict(file: UploadFile = File(...), _user: _UserModel = Depends(requ
             "confidence": 0.0
         }
 
-# ✅ Market Price Prediction  (RBAC: FARMER + ADMIN)
-@app.get("/market-predictions")
-def get_predictions_for_graph(_user: _UserModel = Depends(require_role("FARMER", "ADMIN"))):
-    try:
-        # Load predictor on first use
-        predict_func = load_price_predictor()
-        results = predict_func()
-        return {"status": "success", "data": results}
-    except Exception as e:
-        logger.error(f"Market prediction error: {str(e)}")
-        logger.error(traceback.format_exc())
-        return {
-            "status": "error", 
-            "message": f"Market prediction failed: {str(e)}",
-            "data": []
-        }
 
 # ✅ Weather Forecast (7-day ML prediction)  (RBAC: FARMER + ADMIN)
 @app.get("/weather-forecast")
-def weather_forecast(_user: _UserModel = Depends(require_role("FARMER", "ADMIN"))):
+def weather_forecast(_user: _UserModel = Depends(require_role("FARMER", "AGRONOMIST", "ADMIN"))):
     try:
         from predict_weather import get_weather_forecast
         forecast = get_weather_forecast()
@@ -254,7 +247,7 @@ def weather_forecast(_user: _UserModel = Depends(require_role("FARMER", "ADMIN")
 
 # ✅ Current Weather (live from OpenWeatherMap)  (RBAC: FARMER + ADMIN)
 @app.get("/weather-current")
-def weather_current(city: str = "Cherrapunji", _user: _UserModel = Depends(require_role("FARMER", "ADMIN"))):
+def weather_current(city: str = "Cherrapunji", _user: _UserModel = Depends(require_role("FARMER", "AGRONOMIST", "ADMIN"))):
     try:
         from fetch_weather import get_weather
         data = get_weather(city)
@@ -267,7 +260,7 @@ def weather_current(city: str = "Cherrapunji", _user: _UserModel = Depends(requi
 
 # ✅ Weather Alerts  (RBAC: FARMER + ADMIN)
 @app.get("/weather-alerts")
-def weather_alerts(_user: _UserModel = Depends(require_role("FARMER", "ADMIN"))):
+def weather_alerts(_user: _UserModel = Depends(require_role("FARMER", "AGRONOMIST", "ADMIN"))):
     try:
         from weather_alerts import check_weather_alerts
         alerts = check_weather_alerts()
@@ -303,7 +296,7 @@ soil_info = {
 }
 
 @app.post("/predict-soil")
-async def predict_soil(file: UploadFile = File(...), _user: _UserModel = Depends(require_role("FARMER", "ADMIN"))):
+async def predict_soil(file: UploadFile = File(...), _user: _UserModel = Depends(require_role("FARMER", "AGRONOMIST", "ADMIN"))):
     try:
         # Try to load model on first use
         try:
@@ -429,7 +422,7 @@ async def predict_soil(file: UploadFile = File(...), _user: _UserModel = Depends
 
 # --- Disease: Grad-CAM heatmap + overlay ---
 @app.post("/api/disease/explain")
-async def explain_disease(file: UploadFile = File(...), _user: _UserModel = Depends(require_role("FARMER", "ADMIN"))):
+async def explain_disease(file: UploadFile = File(...), _user: _UserModel = Depends(require_role("FARMER", "AGRONOMIST", "ADMIN"))):
     """Return Grad-CAM heatmap, overlay, prediction and top regions for a plant image."""
     try:
         from xai_gradcam import explain_disease_image
@@ -459,7 +452,7 @@ async def explain_disease(file: UploadFile = File(...), _user: _UserModel = Depe
 
 # --- Soil: Grad-CAM heatmap + rule-based features ---
 @app.post("/api/soil/explain")
-async def explain_soil_endpoint(file: UploadFile = File(...), _user: _UserModel = Depends(require_role("FARMER", "ADMIN"))):
+async def explain_soil_endpoint(file: UploadFile = File(...), _user: _UserModel = Depends(require_role("FARMER", "AGRONOMIST", "ADMIN"))):
     """Return Grad-CAM heatmap for soil image + rule-based feature explanation."""
     try:
         from xai_gradcam import explain_soil_image
@@ -496,39 +489,6 @@ async def explain_soil_endpoint(file: UploadFile = File(...), _user: _UserModel 
         }
 
 
-# --- Price: SHAP feature importance for a single crop ---
-@app.get("/api/price/explain/{crop}")
-def explain_price_endpoint(crop: str, _user: _UserModel = Depends(require_role("FARMER", "ADMIN"))):
-    """Return SHAP top-5 feature importances for the given crop's price model."""
-    try:
-        from xai_shap import explain_price
-        result = explain_price(crop)
-        if "error" in result:
-            return {"status": "error", **result}
-        return {"status": "success", **result}
-    except Exception as e:
-        logger.error(f"Price XAI error for {crop}: {e}")
-        logger.error(traceback.format_exc())
-        return {
-            "status": "error",
-            "error": str(e),
-            "method": "unavailable",
-            "explanation": "Price explainability service encountered an error.",
-        }
-
-
-# --- Price: SHAP for ALL crops at once ---
-@app.get("/api/price/explain")
-def explain_all_prices_endpoint(_user: _UserModel = Depends(require_role("FARMER", "ADMIN"))):
-    """Return SHAP explanations for all supported crops."""
-    try:
-        from xai_shap import explain_all_prices
-        results = explain_all_prices()
-        return {"status": "success", "data": results}
-    except Exception as e:
-        logger.error(f"Price XAI (all) error: {e}")
-        logger.error(traceback.format_exc())
-        return {"status": "error", "error": str(e), "data": {}}
 
 
 # ✅ Print all registered routes on startup
@@ -558,13 +518,7 @@ async def startup_event():
         except Exception as e:
             logger.warning(f"⚠️ Could not pre-load plant disease predictor: {e}")
         
-        # Try to load price predictor
-        try:
-            load_price_predictor()
-            logger.info("✅ Price predictor loaded successfully")
-        except Exception as e:
-            logger.warning(f"⚠️ Could not pre-load price predictor: {e}")
-            
+
     except Exception as e:
         logger.warning(f"⚠️ Model pre-loading failed: {e}")
         logger.info("📝 Models will be loaded on first use")

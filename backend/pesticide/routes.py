@@ -8,7 +8,7 @@ GET  /api/pesticide/health     — module health
 """
 
 import logging
-from typing import Optional
+from typing import Optional, List
 
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
@@ -31,6 +31,7 @@ class PesticideResponse(BaseModel):
     pesticide: str
     dosage: str
     instructions: str
+    precautions: List[str] = []
     disease: str
     crop: str
     matched: bool

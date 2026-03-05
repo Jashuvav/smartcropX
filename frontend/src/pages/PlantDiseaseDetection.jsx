@@ -2,8 +2,10 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ENDPOINTS } from "../config/api";
+import { useAuth } from "../context/AuthContext";
 
 const PlantDiseaseDetection = () => {
+  const { authAxios } = useAuth();
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [detectionResult, setDetectionResult] = useState("");
@@ -120,13 +122,17 @@ const PlantDiseaseDetection = () => {
     formData.append("file", selectedImage);
 
     try {
-      const response = await axios.post(ENDPOINTS.PREDICT_DISEASE, formData, {
+      const api = authAxios();
+      const response = await api.post(ENDPOINTS.PREDICT_DISEASE, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
       setDetectionResult(response.data);
     } catch (error) {
-      setDetectionResult({ error: "Error analyzing image" });
+      const msg = error.response?.status === 401
+        ? "Please log in to use disease detection."
+        : error.response?.data?.detail || "Error analyzing image. Please try again.";
+      setDetectionResult({ error: msg });
     } finally {
       setIsAnalyzing(false);
     }
@@ -139,7 +145,8 @@ const PlantDiseaseDetection = () => {
     const formData = new FormData();
     formData.append("file", selectedImage);
     try {
-      const response = await axios.post(ENDPOINTS.EXPLAIN_DISEASE, formData, {
+      const api = authAxios();
+      const response = await api.post(ENDPOINTS.EXPLAIN_DISEASE, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setXaiResult(response.data);

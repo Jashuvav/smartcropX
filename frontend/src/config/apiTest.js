@@ -11,7 +11,6 @@ export const testApiConnection = async () => {
     health: { status: 'testing', response: null, error: null },
     healthz: { status: 'testing', response: null, error: null },
     predict: { status: 'testing', response: null, error: null },
-    marketPredictions: { status: 'testing', response: null, error: null },
     predictSoil: { status: 'testing', response: null, error: null }
   };
 
@@ -39,18 +38,6 @@ export const testApiConnection = async () => {
     results.healthz.status = 'failed';
     results.healthz.error = error.message;
     console.error('❌ Detailed health check failed:', error.message);
-  }
-
-  // Test market predictions endpoint
-  try {
-    const marketResponse = await axios.get(ENDPOINTS.MARKET_PREDICTIONS, { timeout: 10000 });
-    results.marketPredictions.status = 'success';
-    results.marketPredictions.response = marketResponse.data;
-    console.log('✅ Market predictions test passed:', marketResponse.data);
-  } catch (error) {
-    results.marketPredictions.status = 'failed';
-    results.marketPredictions.error = error.message;
-    console.error('❌ Market predictions test failed:', error.message);
   }
 
   // Test predict endpoint (GET request - should return method not allowed)

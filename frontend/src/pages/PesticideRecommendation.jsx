@@ -195,6 +195,24 @@ const PesticideRecommendation = () => {
               <p className="text-gray-700 leading-relaxed">{result.instructions}</p>
             </div>
 
+            {/* Precautions */}
+            {result.precautions && result.precautions.length > 0 && (
+              <div className="mt-4 bg-gradient-to-br from-amber-50 to-orange-100/60 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <AlertCircle className="w-5 h-5 text-amber-600" />
+                  <span className="font-semibold text-amber-900 text-sm">Precautions</span>
+                </div>
+                <ul className="space-y-2">
+                  {result.precautions.map((p, i) => (
+                    <li key={i} className="flex items-start gap-2 text-amber-800 text-sm">
+                      <span className="mt-1 w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" />
+                      {p}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             {!result.matched && (
               <div className="mt-4 flex items-start gap-2 text-yellow-700 bg-yellow-100 rounded-lg p-3 text-sm">
                 <AlertCircle className="w-5 h-5 mt-0.5 shrink-0" />

@@ -9,9 +9,9 @@ from datetime import datetime
 # ── Auth ────────────────────────────────────────────────────────────
 class RegisterRequest(BaseModel):
     full_name: str = Field(..., min_length=1, max_length=120)
-    email: str = Field(..., min_length=5, max_length=255)
+    email: EmailStr
     password: str = Field(..., min_length=6)
-    role: str = Field("FARMER", pattern="^(FARMER|BUYER|ADMIN)$")
+    role: str = Field("FARMER", pattern="^(FARMER|AGRONOMIST|ADMIN)$")
 
 
 class LoginRequest(BaseModel):

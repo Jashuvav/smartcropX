@@ -24,7 +24,7 @@ def _now():
 # ── enums ───────────────────────────────────────────────────────────
 class Role(str, enum.Enum):
     FARMER = "FARMER"
-    BUYER = "BUYER"
+    AGRONOMIST = "AGRONOMIST"
     ADMIN = "ADMIN"
 
 

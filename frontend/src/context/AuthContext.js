@@ -34,15 +34,41 @@ export function AuthProvider({ children }) {
   };
 
   const register = async (full_name, email, password, role = 'FARMER') => {
-    const res = await axios.post(`${API_URL}/api/auth/register`, { full_name, email, password, role });
-    persist(res.data.access_token, res.data.user);
-    return res.data;
+    try {
+      const res = await axios.post(`${API_URL}/api/auth/register`, {
+        full_name: full_name.trim(),
+        email: email.trim().toLowerCase(),
+        password,
+        role: role.toUpperCase(),
+      });
+      persist(res.data.access_token, res.data.user);
+      return res.data;
+    } catch (err) {
+      // Re-throw with a clear message the UI can display
+      const status = err.response?.status;
+      const detail = err.response?.data?.detail;
+      if (status === 409) {
+        const err409 = new Error(detail || 'This email is already registered. Please login.');
+        err409.status = 409;
+        throw err409;
+      }
+      if (status === 422) throw new Error('Invalid input – please check all fields');
+      throw new Error(detail || 'Registration failed');
+    }
   };
 
   const login = async (email, password) => {
-    const res = await axios.post(`${API_URL}/api/auth/login`, { email, password });
-    persist(res.data.access_token, res.data.user);
-    return res.data;
+    try {
+      const res = await axios.post(`${API_URL}/api/auth/login`, {
+        email: email.trim().toLowerCase(),
+        password,
+      });
+      persist(res.data.access_token, res.data.user);
+      return res.data;
+    } catch (err) {
+      const detail = err.response?.data?.detail;
+      throw new Error(detail || 'Invalid email or password');
+    }
   };
 
   const logout = useCallback(() => {
@@ -55,7 +81,7 @@ export function AuthProvider({ children }) {
   const role = user?.role || null;
   const isAdmin = role === 'ADMIN';
   const isFarmer = role === 'FARMER';
-  const isBuyer = role === 'BUYER';
+  const isAgronomist = role === 'AGRONOMIST';
   const hasRole = (...roles) => roles.map(r => r.toUpperCase()).includes((role || '').toUpperCase());
 
   // Axios instance with auto Bearer header
@@ -68,7 +94,7 @@ export function AuthProvider({ children }) {
   }, [token]);
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, register, login, logout, authAxios, role, isAdmin, isFarmer, isBuyer, hasRole }}>
+    <AuthContext.Provider value={{ user, token, loading, register, login, logout, authAxios, role, isAdmin, isFarmer, isAgronomist, hasRole }}>
       {children}
     </AuthContext.Provider>
   );

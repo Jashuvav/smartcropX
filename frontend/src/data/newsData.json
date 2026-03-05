@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "title": "AI-Powered Crop Monitoring Doubles Yields for Small-Scale Farmers",
+    "description": "Satellite imagery combined with machine-learning models is enabling smallholder farmers to detect nutrient deficiencies and pest infestations weeks before visible symptoms appear, leading to reported yield increases of up to 110 %.",
+    "date": "12 Jun, 2026",
+    "author": "Priya Sharma",
+    "tag": "Technology",
+    "imageUrl": "https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=600&h=400&fit=crop",
+    "url": "https://www.fao.org/digital-agriculture/en/"
+  },
+  {
+    "id": 2,
+    "title": "Government Launches ₹5,000 Cr Organic Farming Mission",
+    "description": "The Ministry of Agriculture announced a new five-year mission to convert 10 million hectares to certified organic production, providing free soil-testing kits, bio-inputs, and premium market linkages to participating farmers.",
+    "date": "8 Jun, 2026",
+    "author": "Rahul Deshmukh",
+    "tag": "Policy",
+    "imageUrl": "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=600&h=400&fit=crop",
+    "url": "https://agricoop.nic.in/"
+  },
+  {
+    "id": 3,
+    "title": "Drip Irrigation Adoption Reaches Record High in Semi-Arid Regions",
+    "description": "Water-efficient drip and sprinkler systems now cover over 15 million hectares nationally, cutting water use by 40 % while improving crop quality and reducing fertiliser run-off in drought-prone districts.",
+    "date": "2 Jun, 2026",
+    "author": "Ananya Reddy",
+    "tag": "Sustainability",
+    "imageUrl": "https://images.unsplash.com/photo-1563514227147-6d2ff665a6a0?w=600&h=400&fit=crop",
+    "url": "https://www.icrisat.org/"
+  },
+  {
+    "id": 4,
+    "title": "New Wheat Variety Resistant to Yellow Rust Released for Rabi 2026",
+    "description": "ICAR has released HD-3386, a high-yielding wheat variety with built-in resistance to all prevailing races of yellow (stripe) rust, expected to boost productivity in northern plains by 8–12 %.",
+    "date": "28 May, 2026",
+    "author": "Dr. Vikram Singh",
+    "tag": "Research",
+    "imageUrl": "https://images.unsplash.com/photo-1437252611977-07f74518abd7?w=600&h=400&fit=crop",
+    "url": "https://icar.org.in/"
+  },
+  {
+    "id": 5,
+    "title": "Tomato Prices Surge 60 % on Unseasonal Rains in Maharashtra",
+    "description": "Unexpected heavy rainfall during the harvest window has damaged standing tomato crops across Nashik and Pune divisions, pushing wholesale prices to ₹80/kg and prompting the government to consider import relaxations.",
+    "date": "20 May, 2026",
+    "author": "Suresh Patil",
+    "tag": "Market",
+    "imageUrl": "https://images.unsplash.com/photo-1592921870789-04563d55041c?w=600&h=400&fit=crop",
+    "url": "https://agmarknet.gov.in/"
+  },
+  {
+    "id": 6,
+    "title": "Drone Spraying Gets Regulatory Green Light for 30 More Crops",
+    "description": "The Central Insecticides Board has approved drone-based pesticide application for an additional 30 crop-pest combinations, making precision spraying accessible and reducing farmer exposure to harmful chemicals.",
+    "date": "15 May, 2026",
+    "author": "Kavita Nair",
+    "tag": "Technology",
+    "imageUrl": "https://images.unsplash.com/photo-1586771107445-b3e7eb9c1e6c?w=600&h=400&fit=crop",
+    "url": "https://ppqs.gov.in/"
+  },
+  {
+    "id": 7,
+    "title": "Community Seed Banks Preserve 200+ Heritage Crop Varieties",
+    "description": "Farmer-led seed banks across 12 states are safeguarding indigenous rice, millet, and vegetable landraces that offer superior climate resilience compared to modern hybrids, with government recognition under the PPV&FR Act.",
+    "date": "10 May, 2026",
+    "author": "Meena Kumari",
+    "tag": "Sustainability",
+    "imageUrl": "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&h=400&fit=crop",
+    "url": "https://www.nbpgr.ernet.in/"
+  },
+  {
+    "id": 8,
+    "title": "Soil Health Card Scheme 2.0 Introduces Real-Time NPK Sensors",
+    "description": "The revamped Soil Health Card programme will distribute IoT-enabled soil sensors to 5 million farms, allowing real-time nitrogen, phosphorus, and potassium monitoring through a mobile app linked to fertiliser recommendations.",
+    "date": "5 May, 2026",
+    "author": "Arun Joshi",
+    "tag": "Policy",
+    "imageUrl": "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600&h=400&fit=crop",
+    "url": "https://soilhealth.dac.gov.in/"
+  }
+]
