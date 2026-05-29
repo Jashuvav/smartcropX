@@ -1,7 +1,8 @@
-import requests
+import csv
 import os
-import pandas as pd
 from datetime import datetime
+
+import requests
 
 API_KEY = os.environ.get("OPENWEATHER_API_KEY", "")
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,14 +26,15 @@ def get_weather(city="Cherrapunji"):
                 "Description": data["weather"][0]["description"]
             }
 
-            # Append to historical CSV
+            # Append to historical CSV without pulling in pandas on deployment.
             try:
-                df = pd.DataFrame([weather_info])
                 file_path = os.path.join(BASE_DIR, "data", "historical_weather.csv")
-                if os.path.exists(file_path):
-                    df.to_csv(file_path, mode="a", header=False, index=False)
-                else:
-                    df.to_csv(file_path, index=False)
+                file_exists = os.path.exists(file_path)
+                with open(file_path, "a", newline="", encoding="utf-8") as handle:
+                    writer = csv.DictWriter(handle, fieldnames=list(weather_info.keys()))
+                    if not file_exists:
+                        writer.writeheader()
+                    writer.writerow(weather_info)
             except Exception:
                 pass  # Don't fail if CSV write fails
 

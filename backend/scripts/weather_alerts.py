@@ -1,4 +1,4 @@
-import pandas as pd
+import csv
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -8,17 +8,18 @@ def check_weather_alerts():
     alerts = []
     try:
         csv_path = os.path.join(BASE_DIR, "data", "historical_weather.csv")
-        weather_df = pd.read_csv(csv_path)
-        if weather_df.empty:
+        with open(csv_path, newline="", encoding="utf-8") as handle:
+            rows = list(csv.DictReader(handle))
+        if not rows:
             return alerts
-        weather = weather_df.iloc[-1]  # use latest row
+        weather = rows[-1]  # use latest row
     except Exception:
         return alerts
 
     condition = str(weather.get("Weather Condition", "")).lower()
-    temp = float(weather.get("Temperature (°C)", 0))
-    humidity = float(weather.get("Humidity (%)", 50))
-    wind = float(weather.get("Wind Speed (m/s)", 0))
+    temp = float(weather.get("Temperature (°C)", 0) or 0)
+    humidity = float(weather.get("Humidity (%)", 50) or 50)
+    wind = float(weather.get("Wind Speed (m/s)", 0) or 0)
 
     if condition in ["storm", "thunderstorm", "hurricane"]:
         alerts.append("Storm Alert! Take precautions.")
