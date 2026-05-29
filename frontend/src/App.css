@@ -1,0 +1,241 @@
+/* Layering structure */
+.App {
+  position: relative;
+  min-height: 100vh;
+}
+
+.header-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000; /* Very high z-index to sit on top */
+  pointer-events: auto !important; /* Force pointer events */
+}
+
+.content-container {
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.app-loaded .content-container {
+  opacity: 1;
+}
+
+/* Animation for scroll reveal */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px); /* Reduced distance for smoother appearance */
+  transition: opacity 1s ease-out, transform 0.7s ease-out;
+  will-change: opacity, transform; /* Performance optimization */
+  position: relative; /* Ensure proper stacking */
+}
+
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Progressive reveal with minimal delays */
+.content-container .scroll-reveal:nth-child(1) { transition-delay: 0.05s; }
+.content-container .scroll-reveal:nth-child(2) { transition-delay: 0.1s; }
+.content-container .scroll-reveal:nth-child(3) { transition-delay: 0.15s; }
+.content-container .scroll-reveal:nth-child(4) { transition-delay: 0.2s; }
+
+/* Debug helper - uncomment to check for overlays */
+/* * {
+  outline: 1px solid rgba(255, 0, 0, 0.2) !important;
+} */
+
+/* ============================================
+   GLASSMORPHISM COMPONENT UTILITIES
+   ============================================ */
+
+/* Page wrapper - base container */
+.page-wrapper {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a 0%, #064e3b 100%);
+  position: relative;
+}
+
+/* Glass card - base style */
+.glass-card {
+  background: rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.25);
+}
+
+/* Glass card variants */
+.glass-card-sm {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.glass-card-lg {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  border-radius: 2rem;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.25);
+}
+
+/* Buttons */
+.button-primary {
+  padding: 0.625rem 1.5rem;
+  border-radius: 0.875rem;
+  background: rgba(16, 185, 129, 0.80);
+  color: white;
+  font-weight: 600;
+  border: 1px solid rgba(34, 197, 94, 0.30);
+  backdrop-filter: blur(8px);
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.button-primary:hover {
+  background: rgba(16, 185, 129, 1);
+  transform: scale(1.05);
+}
+
+.button-secondary {
+  padding: 0.625rem 1.5rem;
+  border-radius: 0.875rem;
+  background: rgba(255, 255, 255, 0.10);
+  color: white;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  backdrop-filter: blur(8px);
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.button-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.30);
+}
+
+.button-ghost {
+  padding: 0.625rem 1.5rem;
+  border-radius: 0.875rem;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.button-ghost:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Inputs */
+.input-glass {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: white;
+  font-size: 1rem;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.input-glass::placeholder {
+  color: rgba(255, 255, 255, 0.40);
+}
+
+.input-glass:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.30);
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.20);
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.875rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.badge-success {
+  background: rgba(34, 197, 94, 0.20);
+  color: rgb(134, 239, 172);
+  border: 1px solid rgba(34, 197, 94, 0.30);
+}
+
+.badge-warning {
+  background: rgba(249, 115, 22, 0.20);
+  color: rgb(254, 215, 170);
+  border: 1px solid rgba(249, 115, 22, 0.30);
+}
+
+.badge-error {
+  background: rgba(239, 68, 68, 0.20);
+  color: rgb(248, 113, 113);
+  border: 1px solid rgba(239, 68, 68, 0.30);
+}
+
+.badge-info {
+  background: rgba(6, 182, 212, 0.20);
+  color: rgb(165, 243, 252);
+  border: 1px solid rgba(6, 182, 212, 0.30);
+}
+
+/* Text hierarchy */
+.text-primary {
+  color: white;
+}
+
+.text-secondary {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.text-muted {
+  color: rgba(255, 255, 255, 0.60);
+}
+
+.text-subtle {
+  color: rgba(255, 255, 255, 0.40);
+}
+
+/* Dividers */
+.divider-glass {
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+}
+
+/* Section spacing */
+.section-py {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+@media (max-width: 768px) {
+  .section-py {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+}
